@@ -28,11 +28,11 @@ const router = createBrowserRouter([
       },
       // Auth Protected routes
       {
-        path: "/",
+        path: "/app",
         element: <AuthProtectedRoute />,
         children: [
           {
-            path: "/protected",
+            path: "protected",
             element: <ProtectedPage />,
           },
         ],
