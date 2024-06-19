@@ -25,7 +25,7 @@ const LoadingFallback = ({
             zIndex: hidden ? 10 : -10,
           }}
         >
-          <h1 className="text-3xl mb-2">Kanban Board</h1>
+          <h1 className="text-3xl mb-2">Kanban Light</h1>
           <p className="text-xs">loading</p>
           <div className="lds-ellipsis">
             <div></div>
