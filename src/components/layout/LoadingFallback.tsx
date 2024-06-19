@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const LoadingPage = ({
+const LoadingFallback = ({
   hidden,
   children,
 }: {
@@ -40,4 +40,4 @@ const LoadingPage = ({
   );
 };
 
-export default LoadingPage;
+export default LoadingFallback;
