@@ -2,17 +2,22 @@ import { Navigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import supabase from "../supabase";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const HomePage = () => {
   const { session } = useSession();
   if (session) return <Navigate to="/app" />;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleSignInWithGithub = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    setIsLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
     });
     if (error) {
       toast.error(error.message);
+      setIsLoading(false);
     } else {
       toast.success("Authenticated");
     }
@@ -26,6 +31,7 @@ const HomePage = () => {
 
         <button
           onClick={handleSignInWithGithub}
+          disabled={isLoading}
           className="flex items-center justify-center gap-2 bg-zinc-800 px-4 drop-shadow-xl shadow-2xl rounded-md"
         >
           <svg
