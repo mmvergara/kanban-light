@@ -1,16 +1,18 @@
 import { useRef, useState } from "react";
+import supabase from "../supabase";
+
 
 const CreateProject = () => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleCreateProject = () => {
-    console.log(projectName);
+  const handleCreateProject = async () => {
+    // supabase.from("projects").insert({name: projectName})
   };
   return (
     <>
       {isCreating ? (
-        <form>
+        <form onSubmit={handleCreateProject}>
           <input
             type="text"
             className="bg-[#191919] w-full p-1 px-2 text-sm outline-none"
@@ -18,10 +20,14 @@ const CreateProject = () => {
             ref={inputRef}
           />
           <div className="w-full flex gap-1 mt-1">
-            <button className="text-sm p-1 w-[50%] bg-[#191919] hover:text-emerald-500">
+            <button
+              type="submit"
+              className="text-sm p-1 w-[50%] bg-[#191919] hover:text-emerald-500"
+            >
               Add
             </button>
             <button
+              type="button"
               className="text-sm p-1 w-[50%] bg-[#191919] hover:text-red-500"
               onClick={() => setIsCreating(false)}
             >
