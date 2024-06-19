@@ -1,0 +1,40 @@
+const motivationalQuotes = [
+  "Believe you can.",
+  "Stay focused.",
+  "Dream big.",
+  "You got this.",
+  "Never give up.",
+  "Keep pushing.",
+  "Stay strong.",
+  "Make it happen.",
+  "Embrace change.",
+  "Stay positive.",
+  "Think big.",
+  "Do your best.",
+  "Stay determined.",
+  "Learn from failure.",
+  "Challenge yourself.",
+  "Work hard.",
+  "Love what you do.",
+  "Enjoy the journey.",
+  "Push your limits.",
+  "Follow your dreams.",
+  "Focus on progress.",
+  "Never look back.",
+  "Celebrate small victories.",
+  "Create your destiny.",
+  "Embrace the struggle.",
+  "Keep moving forward.",
+  "Trust the process.",
+  "Keep your head up.",
+  "Stay positive always.",
+  "Believe in yourself.",
+  "Stay hungry, stay foolish.",
+  "Act with courage.",
+  "Keep going.",
+];
+
+export const getRandomQuote = () => {
+  const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+  return motivationalQuotes[randomIndex];
+};
