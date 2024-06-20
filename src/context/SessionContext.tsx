@@ -5,8 +5,10 @@ import { Session } from "@supabase/supabase-js";
 
 const SessionContext = createContext<{
   session: Session | null;
+  user: Session["user"] | undefined;
 }>({
   session: null,
+  user: undefined,
 });
 
 export const useSession = () => {
@@ -36,7 +38,7 @@ export const SessionProvider = ({ children }: Props) => {
   }, [supabase]);
 
   return (
-    <SessionContext.Provider value={{ session }}>
+    <SessionContext.Provider value={{ session, user: session?.user }}>
       <LoadingPage hidden={isLoading}>{!isLoading && children}</LoadingPage>
     </SessionContext.Provider>
   );
