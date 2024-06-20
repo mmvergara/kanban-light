@@ -1,13 +1,38 @@
 import { useRef, useState } from "react";
 import supabase from "../supabase";
+import { useSession } from "../context/SessionContext";
+import { ProjectsTable } from "../supabase/supabase-types";
 
+type Props = {
+  highestOrder: number;
+  onNewProject: (project: ProjectsTable) => void;
+};
 
-const CreateProject = () => {
+const CreateProject = ({ highestOrder, onNewProject }: Props) => {
+  const { user } = useSession();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const handleCreateProject = async () => {
-    // supabase.from("projects").insert({name: projectName})
+    if (projectName.trim() === "") return;
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("projects")
+      .insert({
+        name: projectName,
+        owner: user.id,
+        order: highestOrder + 100,
+      })
+      .select("*");
+    if (data && data.length == 1) {
+      onNewProject(data[0]);
+    }
+    if (error) {
+      console.error(error);
+      return;
+    }
+    setProjectName("");
+    setIsCreating(false);
   };
   return (
     <>
