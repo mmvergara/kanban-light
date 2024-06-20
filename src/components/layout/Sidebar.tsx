@@ -6,7 +6,6 @@ import Clock from "./Clock";
 import CreateProject from "../CreateProject";
 import { ProjectsTable } from "../../supabase/supabase-types";
 import { useEffect, useState } from "react";
-import { Reorder } from "framer-motion";
 
 const Sidebar = () => {
   const [projects, setProjects] = useState<ProjectsTable[]>([]);
@@ -47,8 +46,7 @@ const Sidebar = () => {
             <Link
               key={p.id}
               to={`/app/${p.id}`}
-              className="p-2 text-sm bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
-              // draggable="true"
+              className="p-2 text-sm hover:bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
