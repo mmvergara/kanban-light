@@ -8,7 +8,7 @@ type Props = {
 const Layout = ({ children }: Props) => {
   const { session } = useSession();
   return (
-    <main className="flex h-[100vh] bg-[#191919]">
+    <main className="flex h-[100vh] overflow-hidden bg-[#191919]">
       {session && <Sidebar />}
       {children}
     </main>
