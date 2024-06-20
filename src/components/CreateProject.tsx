@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import supabase from "../supabase";
 import { useSession } from "../context/SessionContext";
 import { ProjectsTable } from "../supabase/supabase-types";
@@ -13,7 +13,8 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleCreateProject = async () => {
+  const handleCreateProject = async (e: FormEvent) => {
+    e.preventDefault();
     if (projectName.trim() === "") return;
     if (!user) return;
     const { data, error } = await supabase
@@ -43,6 +44,8 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
             className="bg-[#191919] w-full p-1 px-2 text-sm outline-none"
             placeholder="Project Name"
             ref={inputRef}
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
           />
           <div className="w-full flex gap-1 mt-1">
             <button
@@ -78,9 +81,9 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path d="M5 12h14" />
             <path d="M12 5v14" />
