@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import supabase from "../supabase";
 import { useSession } from "../context/SessionContext";
 import { ProjectsTable } from "../supabase/supabase-types";
@@ -12,7 +12,6 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
   const { user } = useSession();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
-  const inputRef = useRef<HTMLInputElement>(null);
   const handleCreateProject = async (e: FormEvent) => {
     e.preventDefault();
     if (projectName.trim() === "") return;
@@ -43,23 +42,23 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
             type="text"
             className="bg-[#191919] w-full p-1 px-2 text-sm outline-none"
             placeholder="Project Name"
-            ref={inputRef}
             value={projectName}
+            autoFocus
             onChange={(e) => setProjectName(e.target.value)}
           />
-          <div className="w-full flex gap-1 mt-1">
+          <div className="w-[50%] ml-auto flex gap-1 mt-1">
             <button
               type="submit"
               className="text-sm p-1 w-[50%] bg-[#191919] hover:text-emerald-500"
             >
-              Add
+              add
             </button>
             <button
               type="button"
               className="text-sm p-1 w-[50%] bg-[#191919] hover:text-red-500"
               onClick={() => setIsCreating(false)}
             >
-              Cancel
+              close
             </button>
           </div>
         </form>
@@ -69,9 +68,6 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
           draggable="true"
           onClick={() => {
             setIsCreating(true);
-            setTimeout(() => {
-              inputRef.current?.focus();
-            }, 100);
           }}
         >
           <svg
@@ -88,6 +84,7 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
             <path d="M5 12h14" />
             <path d="M12 5v14" />
           </svg>
+          New
         </button>
       )}
     </>
