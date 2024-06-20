@@ -42,41 +42,31 @@ const Sidebar = () => {
           </p>
         </h1>
 
-        <Reorder.Group
-          axis="y"
-          values={projects}
-          onReorder={(e) => {
-            console.log(e);
-            setProjects(e);
-          }}
-        >
-          {projects.map((p) => {
-            return (
-              <Reorder.Item key={p.id} value={p}>
-                <button
-                  // to={`/projects/${p.id}`}
-                  className="p-2 text-sm bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
-                  // draggable="true"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18" />
-                  </svg>
-                  {p.name}
-                </button>
-              </Reorder.Item>
-            );
-          })}
-        </Reorder.Group>
+        {projects.map((p) => {
+          return (
+            <Link
+              key={p.id}
+              to={`/app/${p.id}`}
+              className="p-2 text-sm bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
+              // draggable="true"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18" />
+              </svg>
+              {p.name}
+            </Link>
+          );
+        })}
 
         <CreateProject
           highestOrder={highestOrder}
