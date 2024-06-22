@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const [projects, setProjects] = useState<ProjectsTable[]>([]);
+  const [isLoading, setIsloading] = useState<boolean>(true);
+  const [quote] = useState(getRandomQuote());
   const handleLogout = async () => {
     await supabase.auth.signOut();
     toast.success("Signed out successfully");
@@ -18,12 +20,14 @@ const Sidebar = () => {
     const { data, error } = await supabase.from("projects").select("*");
     if (error) {
       console.error(error);
+      setIsloading(false);
       return;
     }
     if (data) {
       setProjects(data);
       console.log(data);
     }
+    setIsloading(false);
   };
 
   useEffect(() => {
@@ -36,11 +40,9 @@ const Sidebar = () => {
       <section className="w-full flex flex-col">
         <h1 className="text-center items-center bg-[#191919] p-2 rounded-sm text-emerald-400 mb-1">
           Kanban Light
-          <p className="text-xs text-center text-zinc-400 mt-1">
-            {getRandomQuote()}
-          </p>
+          <p className="text-xs text-center text-zinc-400 mt-1">{quote}</p>
         </h1>
-
+        <Clock />
         {projects.map((p) => {
           return (
             <Link
@@ -65,7 +67,13 @@ const Sidebar = () => {
             </Link>
           );
         })}
-
+        {isLoading && (
+          <>
+            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
+            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
+            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
+          </>
+        )}
         <CreateProject
           highestOrder={highestOrder}
           onNewProject={(p) => {
@@ -73,16 +81,10 @@ const Sidebar = () => {
           }}
         />
       </section>
-      <div>
-        <div className="bg-[#191919] p-1 px-2 rounded-">
-          <button
-            onClick={handleLogout}
-            className=" hover:text-red-600 text-xs"
-          >
-            Sign Out
-          </button>
-          <Clock />
-        </div>
+      <div className="bg-[#191919] p-1 px-2 w-fit">
+        <button onClick={handleLogout} className=" hover:text-red-600 text-xs">
+          Sign Out
+        </button>
       </div>
     </aside>
   );
