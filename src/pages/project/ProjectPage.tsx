@@ -15,7 +15,7 @@ const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
 const ProjectPage = () => {
   const params = useParams();
   const projectId = params.projectId!;
-
+  const [projectData, setProjectData] = useState<KanbanBoard | null>(null);
   const [boards, setBoards] = useState<KanbanBoard["boards"] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const handleGetProjectData = async () => {
@@ -31,6 +31,7 @@ const ProjectPage = () => {
     if (data && data.length == 1) {
       const projectData = data[0] as KanbanBoard;
       setBoards(projectData.boards);
+      setProjectData(projectData);
       setIsLoading(false);
     }
   };
@@ -188,14 +189,15 @@ const ProjectPage = () => {
     }
   };
   return (
-    <div className="m-4 flex overflow-hidden overflow-x-auto">
+    <div className="m-4 flex flex-col overflow-hidden overflow-x-auto">
+      <h1 className="pl-1 text-xl">{projectData?.name}</h1>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="boards" type="board" direction="horizontal">
           {(provided) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="h-full flex py-4 px-2 gap-1"
+              className="h-full flex   gap-1"
             >
               {boards.map((board, idx) => {
                 return <Board board={board} key={board.id} idx={idx} />;
