@@ -4,28 +4,23 @@ export type ProjectsTable = Database["public"]["Tables"]["projects"]["Row"];
 export type BoardsTable = Database["public"]["Tables"]["boards"]["Row"];
 export type TasksTable = Database["public"]["Tables"]["tasks"]["Row"];
 
+export type BoardWithTasks = {
+  created_at: string;
+  id: string;
+  name: string;
+  order: number;
+  owner_id: string;
+  project_id: string;
+  tasks: TasksTable[];
+};
+
 export type KanbanBoard = {
   created_at: string;
   id: string;
   name: string;
   order: number;
   owner: string;
-  boards: {
-    created_at: string;
-    id: string;
-    name: string;
-    order: number;
-    owner_id: string;
-    project_id: string;
-    tasks: {
-      board_id: string | null;
-      created_at: string;
-      id: string;
-      name: string;
-      order: number;
-      owner_id: string;
-    }[];
-  }[];
+  boards: BoardWithTasks[];
 };
 
 export const dummyKanbanBoard: KanbanBoard = {
