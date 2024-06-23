@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import supabase from "../../supabase";
 import {
   BoardsTable,
@@ -6,7 +6,7 @@ import {
   KanbanBoard,
   TasksTable,
 } from "../../supabase/supabase-types";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Board from "../../components/project/Board";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
@@ -19,7 +19,9 @@ const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
   result.splice(endIdx, 0, removed);
   return result;
 };
+
 const ProjectPage = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const projectId = params.projectId!;
   const { user } = useSession();
@@ -35,8 +37,29 @@ const ProjectPage = () => {
   const [boards, setBoards] = useState<KanbanBoard["boards"]>(localBoards);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [newBoardName, setNewBoardName] = useState<string>("");
+  const [projectExists, setProjectExists] = useState<boolean>(true);
 
-  const handleAddNewBoard = async () => {
+  const handleDeleteProject = async () => {
+    if (!user) return;
+    setIsLoading(true);
+    const { error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", projectId);
+    setIsLoading(false);
+    if (error) {
+      console.error(error);
+      toast.error("Failed to delete project");
+      return;
+    }
+    // reload page
+    setLocalBoards([]);
+    setLocalProjectData(null);
+    navigate("/app");
+    toast.success("Project deleted successfully");
+  };
+  const handleAddNewBoard = async (e: FormEvent) => {
+    e.preventDefault();
     if (!user) return;
     if (newBoardName.trim() === "") return;
     const newBoard = {
@@ -45,7 +68,7 @@ const ProjectPage = () => {
       owner_id: user?.id,
       project_id: projectId,
     };
-    const { error, data } = await supabase
+    const { data, error } = await supabase
       .from("boards")
       .insert(newBoard)
       .select("*")
@@ -59,8 +82,8 @@ const ProjectPage = () => {
       const newBoard: BoardWithTasks = { ...data, tasks: [] };
       setBoards([...boards, newBoard]);
     }
+    setNewBoardName("");
   };
-
   const handleDeleteBoard = async (boardId: string) => {
     setBoards((prevBoards) => {
       const newBoards = prevBoards.filter((board) => board.id !== boardId);
@@ -76,7 +99,6 @@ const ProjectPage = () => {
       return;
     }
   };
-
   const handleAddTask = async (task: TasksTable) => {
     const newBoards = boards.map((board) => {
       if (board.id === task.board_id) {
@@ -108,16 +130,15 @@ const ProjectPage = () => {
       .from("projects")
       .select("*,boards(*,tasks(*))")
       .eq("id", projectId);
+    setIsLoading(false);
     if (error) {
-      console.error(error);
-      setIsLoading(false);
+      setProjectExists(false);
       return;
     }
     if (data && data.length == 1) {
       const projectData = data[0] as KanbanBoard;
       setBoards(projectData.boards);
       setProjectData(projectData);
-      setIsLoading(false);
     }
   };
   const handleUpdateBoards = async (board: BoardsTable[]) => {
@@ -170,11 +191,10 @@ const ProjectPage = () => {
     handleGetProjectData();
   }, [projectId]);
 
-  // if (isLoading) return <div>Loading...</div>;
-  // if (!boards) {
-  //   toast.error("Project not found");
-  //   return <Navigate to="/" />;
-  // }
+  if (!isLoading && !projectExists) {
+    toast.error("Project not found");
+    return <Navigate to="/" />;
+  }
 
   if (!isLoading && !projectData) return <Navigate to="/" />;
 
@@ -290,7 +310,15 @@ const ProjectPage = () => {
   return (
     <div className="m-4 flex flex-col overflow-hidden overflow-x-auto">
       <div className="flex flex-col pl-1 ">
-        <h1 className="text-xl">{projectData?.name}</h1>
+        <div className="flex gap-2 hover:cursor-pointer items-end w-fit p-1 px-2 rounded-sm group hover:bg-[#282828]">
+          <h1 className="text-xl">{projectData?.name}</h1>
+          <button
+            onClick={handleDeleteProject}
+            className="text-xs group-hover:opacity-100 opacity-0 ml-auto hover:text-red-500 hover:font-semibold"
+          >
+            delete
+          </button>
+        </div>
         <span
           className="text-xs text-gray-600 font-medium"
           style={{
@@ -323,18 +351,20 @@ const ProjectPage = () => {
                   );
                 })}
               {provided.placeholder}
-              <form className="w-[254px] h-fit p-2 flex items-center gap-1">
+              <form
+                onSubmit={handleAddNewBoard}
+                className="w-[254px] h-fit p-2 flex items-center gap-1"
+              >
                 <input
                   type="text"
                   value={newBoardName}
                   onChange={(e) => setNewBoardName(e.target.value)}
-                  className="w-full focus:bg-[#282828] bg-[#191919] rounded-sm h-full  border-none outline-none text-sm text-zinc-400 p-1 "
+                  className="w-full focus:bg-[#282828] bg-[#191919] rounded-sm h-full  border-none outline-none text-sm text-zinc-400 p-1 placeholder-zinc-200"
                   placeholder="+ New Board"
                 />
                 {newBoardName.length > 0 && (
                   <button
-                    type="button"
-                    onClick={handleAddNewBoard}
+                    type="submit"
                     className="p-[5px] px-[8px] text-xs rounded-sm  bg-[#282828] hover:text-emerald-500"
                   >
                     add

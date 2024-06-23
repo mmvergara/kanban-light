@@ -18,6 +18,7 @@ const Sidebar = () => {
   const [quote] = useState(getRandomQuote());
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    window.localStorage.clear();
     toast.success("Signed out successfully");
   };
 
@@ -84,14 +85,6 @@ const Sidebar = () => {
           </>
         )} */}
         {isLoading ? (
-          // <span
-          //   className="text-xs text-gray-600 font-medium"
-          //   style={{
-          //     opacity: isLoading ? 1 : 0,
-          //   }}
-          // >
-          //   syncing...
-          // </span>
           <div className="p-2 text-sm hover:bg-[#191919] text-[#919191] w-full flex items-center gap-1 rounded-sm transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -100,9 +93,7 @@ const Sidebar = () => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              className="animate-spin"
             >
               <path d="M3 2v6h6" />
               <path d="M21 12A9 9 0 0 0 6 5.3L3 8" />
