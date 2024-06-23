@@ -6,10 +6,17 @@ type Props = {
   idx: number;
   board: BoardWithTasks;
   onDeleteTask: (taskId: string) => Promise<void>;
+  onDeleteBoard: (boardId: string) => Promise<void>;
   onAddTask: (task: TasksTable) => Promise<void>;
 };
 
-const Board = ({ board, idx, onDeleteTask, onAddTask }: Props) => {
+const Board = ({
+  board,
+  idx,
+  onDeleteTask,
+  onAddTask,
+  onDeleteBoard,
+}: Props) => {
   return (
     <Draggable draggableId={board.id} index={idx}>
       {(provided) => (
@@ -21,7 +28,10 @@ const Board = ({ board, idx, onDeleteTask, onAddTask }: Props) => {
           <div {...provided.dragHandleProps} className="">
             <div className="mb-1 rounded-sm px-1 group flex justify-between items-center w-full">
               <h4 className="text-md  font-semibold">{board.name}</h4>
-              <button className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto hover:text-red-500 hover:font-semibold">
+              <button
+                onClick={() => onDeleteBoard(board.id)}
+                className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto hover:text-red-500 hover:font-semibold"
+              >
                 delete
               </button>
             </div>
