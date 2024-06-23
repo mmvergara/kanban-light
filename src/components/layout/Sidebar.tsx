@@ -6,9 +6,14 @@ import Clock from "./Clock";
 import CreateProject from "../CreateProject";
 import { ProjectsTable } from "../../supabase/supabase-types";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const Sidebar = () => {
-  const [projects, setProjects] = useState<ProjectsTable[]>([]);
+  const [localProjects, setLocalProjects] = useLocalStorage<ProjectsTable[]>(
+    `projects`,
+    []
+  );
+  const [projects, setProjects] = useState<ProjectsTable[]>(localProjects);
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [quote] = useState(getRandomQuote());
   const handleLogout = async () => {
@@ -33,6 +38,10 @@ const Sidebar = () => {
   useEffect(() => {
     handleGetProjects();
   }, []);
+
+  useEffect(() => {
+    setLocalProjects(projects);
+  }, [projects]);
   // #e9e9e9
   const highestOrder = Math.max(...projects.map((p) => p.order), 0);
   return (
@@ -67,19 +76,50 @@ const Sidebar = () => {
             </Link>
           );
         })}
-        {isLoading && (
+        {/* {isLoading && (
           <>
             <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
             <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
             <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
           </>
+        )} */}
+        {isLoading ? (
+          // <span
+          //   className="text-xs text-gray-600 font-medium"
+          //   style={{
+          //     opacity: isLoading ? 1 : 0,
+          //   }}
+          // >
+          //   syncing...
+          // </span>
+          <div className="p-2 text-sm hover:bg-[#191919] text-[#919191] w-full flex items-center gap-1 rounded-sm transition-all">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 2v6h6" />
+              <path d="M21 12A9 9 0 0 0 6 5.3L3 8" />
+              <path d="M21 22v-6h-6" />
+              <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
+              <circle cx="12" cy="12" r="1" />
+            </svg>
+            Syncing...
+          </div>
+        ) : (
+          <CreateProject
+            highestOrder={highestOrder}
+            onNewProject={(p) => {
+              setProjects([...projects, p]);
+            }}
+          />
         )}
-        <CreateProject
-          highestOrder={highestOrder}
-          onNewProject={(p) => {
-            setProjects([...projects, p]);
-          }}
-        />
       </section>
       <div className="bg-[#191919] p-1 px-2 w-fit">
         <button onClick={handleLogout} className=" hover:text-red-600 text-xs">
