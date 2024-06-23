@@ -24,7 +24,7 @@ const Task = ({ task, idx, onDeleteTask }: Props) => {
           <div className="flex justify-end">
             <button
               onClick={() => onDeleteTask(task.id)}
-              className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto  hover:text-red-700"
+              className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto  hover:text-red-500 hover:font-semibold"
             >
               delete
             </button>
