@@ -1,17 +1,14 @@
 import { FormEvent, useState } from "react";
-import supabase from "../../supabase";
-import { BoardsTable, TasksTable } from "../../supabase/supabase-types";
+import { TasksTable } from "../../supabase/supabase-types";
 import { useSession } from "../../context/SessionContext";
-import { toast } from "react-toastify";
-import { motion } from "framer-motion";
-
+import { v4 as uuidv4 } from "uuid";
 type Props = {
-  board: BoardsTable;
   tasks: TasksTable[];
-  onNewTask: (newTask: TasksTable) => void;
+  board_id: string;
+  onAddTask: (task: TasksTable) => Promise<void>;
 };
 
-const CreateTask = ({ board, tasks, onNewTask }: Props) => {
+const CreateTask = ({ tasks, board_id, onAddTask }: Props) => {
   const { user } = useSession();
   const [taskName, setTaskName] = useState<string>("");
   const [isCreatingTask, setIsCreatingTask] = useState<boolean>(false);
@@ -20,40 +17,32 @@ const CreateTask = ({ board, tasks, onNewTask }: Props) => {
     e.preventDefault();
     if (taskName.trim() === "") return;
     if (!user) return;
-    const { data, error } = await supabase
-      .from("tasks")
-      .insert({
-        board_id: board.id,
-        name: taskName,
-        owner_id: user.id,
-        order:
-          Math.max(
-            ...tasks.filter((t) => t.board_id === board.id).map((t) => t.order),
-            1
-          ) + 1000,
-      })
-      .select("*")
-      .maybeSingle();
-    if (error) {
-      toast.error("Error Creating Task");
-      console.log(error);
-      return;
-    }
-    if (data) {
-      onNewTask(data);
-      setTaskName("");
-    }
+    const newTask: TasksTable = {
+      id: uuidv4(),
+      board_id: board_id,
+      name: taskName,
+      owner_id: user.id,
+      order: tasks.length,
+      created_at: new Date().toISOString(),
+    };
+    onAddTask(newTask);
+    setTaskName("");
   };
   return (
-    <motion.div>
+    <>
       {isCreatingTask ? (
         <form onSubmit={handleCreateTask}>
           <input
             autoFocus
+            onBlurCapture={() => {
+              if (taskName.trim() === "") {
+                setIsCreatingTask(false);
+              }
+            }}
             type="text"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
-            className="w-full bg-[#191919] rounded-sm p-1 h-full max-h-[80px]  border-none outline-none text-sm text-zinc-400"
+            className="w-full mt-1 bg-[#191919] rounded-sm p-1 h-full max-h-[80px]  border-none outline-none text-sm text-zinc-400"
             placeholder="Task Name"
           />
           <div className="w-[50%] ml-auto flex gap-1 mt-1">
@@ -75,12 +64,12 @@ const CreateTask = ({ board, tasks, onNewTask }: Props) => {
       ) : (
         <button
           onClick={() => setIsCreatingTask(true)}
-          className="text-xs w-full text-left p-2 rounded-sm hover:bg-[#3f3f3f]"
+          className="text-xs w-full text-left p-2 rounded-sm mt-1 hover:bg-[#3f3f3f]"
         >
           + Create Task
         </button>
       )}
-    </motion.div>
+    </>
   );
 };
 
