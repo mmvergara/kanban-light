@@ -23,6 +23,15 @@ export type KanbanBoard = {
   boards: BoardWithTasks[];
 };
 
+
+
+export type TaskFormValues = {
+  name: string;
+  board_id: string;
+  owner_id: string;
+  order: number;
+}
+
 export const dummyKanbanBoard: KanbanBoard = {
   created_at: "2024-01-01T00:00:00Z",
   id: "kanban_board_1",
