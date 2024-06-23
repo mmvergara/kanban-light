@@ -19,9 +19,12 @@ const Board = ({ board, idx, onDeleteTask, onAddTask }: Props) => {
           className="h-full flex py-2  px-2 gap-1 active:border-opacity-100 border-[1px] border-[#2f2f2f] rounded-md border-opacity-0"
         >
           <div {...provided.dragHandleProps} className="">
-            <h4 className="text-md mb-1 rounded-sm w-fit px-1 font-semibold">
-              {board.name}
-            </h4>
+            <div className="mb-1 rounded-sm px-1 group flex justify-between items-center w-full">
+              <h4 className="text-md  font-semibold">{board.name}</h4>
+              <button className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto hover:text-red-500 hover:font-semibold">
+                delete
+              </button>
+            </div>
             <Droppable droppableId={board.id} type="task">
               {(provided) => (
                 <div
