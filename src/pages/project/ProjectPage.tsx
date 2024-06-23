@@ -61,6 +61,22 @@ const ProjectPage = () => {
     }
   };
 
+  const handleDeleteBoard = async (boardId: string) => {
+    setBoards((prevBoards) => {
+      const newBoards = prevBoards.filter((board) => board.id !== boardId);
+      return newBoards;
+    });
+
+    setIsLoading(true);
+    const { error } = await supabase.from("boards").delete().eq("id", boardId);
+    setIsLoading(false);
+    if (error) {
+      console.error(error);
+      toast.error("Failed to delete board");
+      return;
+    }
+  };
+
   const handleAddTask = async (task: TasksTable) => {
     const newBoards = boards.map((board) => {
       if (board.id === task.board_id) {
@@ -74,18 +90,19 @@ const ProjectPage = () => {
 
     setBoards(newBoards);
 
+    setIsLoading(true);
     const { error } = await supabase
       .from("tasks")
       .insert(task)
       .select("*")
       .maybeSingle();
+    setIsLoading(false);
     if (error) {
       console.error(error);
       toast.error("Failed to create task");
       setBoards(boards);
     }
   };
-
   const handleGetProjectData = async () => {
     const { data, error } = await supabase
       .from("projects")
@@ -103,7 +120,6 @@ const ProjectPage = () => {
       setIsLoading(false);
     }
   };
-
   const handleUpdateBoards = async (board: BoardsTable[]) => {
     setIsLoading(true);
     const { error } = await supabase.from("boards").upsert(board);
@@ -114,7 +130,6 @@ const ProjectPage = () => {
     }
     setIsLoading(false);
   };
-
   const handleUpdateTasks = async (tasks: TasksTable[]) => {
     setIsLoading(true);
     const { error } = await supabase.from("tasks").upsert(tasks);
@@ -122,10 +137,10 @@ const ProjectPage = () => {
       console.error(error);
       toast.error("Failed to update tasks");
       setBoards(boards);
+      setIsLoading(false);
     }
     setIsLoading(false);
   };
-
   const handleDeleteTask = async (taskId: string) => {
     setBoards((prevBoards) => {
       const newBoards = prevBoards.map((board) => {
@@ -298,6 +313,7 @@ const ProjectPage = () => {
                 .map((board, idx) => {
                   return (
                     <Board
+                      onDeleteBoard={handleDeleteBoard}
                       onAddTask={handleAddTask}
                       onDeleteTask={handleDeleteTask}
                       board={board}
