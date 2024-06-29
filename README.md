@@ -2,7 +2,7 @@
   <img src="./public/logo.png " width="200" height="200" />
 </p>
 <h4 align="center">
-<a href="https://kanban-light.vercel.app/">Kanban Board</a>
+<a href="https://kanban-light.vercel.app/">Kanban Light</a>
 </h4>
 <p align="center">
 Open source light weight kanban board
