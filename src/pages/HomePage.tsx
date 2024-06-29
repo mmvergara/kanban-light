@@ -27,7 +27,7 @@ const HomePage = () => {
     <div className="flex justify-center items-center w-full">
       <div className="flex justify-center items-center flex-col p-10 mx-auto bg-[#202020]">
         <h1 className="text-3xl">Kanban Light</h1>
-        <p className="mb-8 text-md">Open source light weight kanban board.</p>
+        <p className="mb-8 text-md">Open source light weight kanban column.</p>
 
         <button
           onClick={handleSignInWithGithub}

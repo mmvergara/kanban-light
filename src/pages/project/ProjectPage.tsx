@@ -7,11 +7,11 @@ import {
   TasksTable,
 } from "../../supabase/supabase-types";
 import { FormEvent, useEffect, useState } from "react";
-import Board from "../../components/project/Board";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useSession } from "../../context/SessionContext";
+import Column from "../../components/project/Column";
 
 const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
   const result = Array.from(list);
@@ -76,7 +76,7 @@ const ProjectPage = () => {
       .maybeSingle();
     if (error) {
       console.error(error);
-      toast.error("Failed to create board");
+      toast.error("Failed to create column");
       setBoards(columns);
     }
     if (data) {
@@ -87,7 +87,7 @@ const ProjectPage = () => {
   };
   const handleDeleteBoard = async (boardId: string) => {
     setBoards((prevBoards) => {
-      const newBoards = prevBoards.filter((board) => board.id !== boardId);
+      const newBoards = prevBoards.filter((column) => column.id !== boardId);
       return newBoards;
     });
 
@@ -96,19 +96,19 @@ const ProjectPage = () => {
     setIsLoading(false);
     if (error) {
       console.error(error);
-      toast.error("Failed to delete board");
+      toast.error("Failed to delete column");
       return;
     }
   };
   const handleAddTask = async (task: TasksTable) => {
-    const newBoards = columns.map((board) => {
-      if (board.id === task.column_id) {
-        if (!board.tasks) {
-          board.tasks = [];
+    const newBoards = columns.map((column) => {
+      if (column.id === task.column_id) {
+        if (!column.tasks) {
+          column.tasks = [];
         }
-        board.tasks.push(task);
+        column.tasks.push(task);
       }
-      return board;
+      return column;
     });
 
     setBoards(newBoards);
@@ -142,9 +142,9 @@ const ProjectPage = () => {
       setProjectData(projectData);
     }
   };
-  const handleUpdateBoards = async (board: BoardsTable[]) => {
+  const handleUpdateBoards = async (column: BoardsTable[]) => {
     setIsLoading(true);
-    const { error } = await supabase.from("columns").upsert(board);
+    const { error } = await supabase.from("columns").upsert(column);
     if (error) {
       console.error(error);
       toast.error("Failed to update columns");
@@ -165,10 +165,10 @@ const ProjectPage = () => {
   };
   const handleDeleteTask = async (taskId: string) => {
     setBoards((prevBoards) => {
-      const newBoards = prevBoards.map((board) => {
-        if (!board.tasks) return board;
-        const newTasks = board.tasks.filter((task) => task.id !== taskId);
-        return { ...board, tasks: newTasks };
+      const newBoards = prevBoards.map((column) => {
+        if (!column.tasks) return column;
+        const newTasks = column.tasks.filter((task) => task.id !== taskId);
+        return { ...column, tasks: newTasks };
       });
       return newBoards;
     });
@@ -209,25 +209,25 @@ const ProjectPage = () => {
     )
       return;
 
-    // User moves a board
-    if (type === "board") {
-      console.log("board move");
+    // User moves a column
+    if (type === "column") {
+      console.log("column move");
       const newBoards = reorder(columns, source.index, destination.index).map(
-        (board, idx) => {
-          return { ...board, order: idx };
+        (column, idx) => {
+          return { ...column, order: idx };
         }
       );
 
       setBoards(newBoards);
       // Trigger columns update
-      const newBoardsData: BoardsTable[] = newBoards.map((board) => {
+      const newBoardsData: BoardsTable[] = newBoards.map((column) => {
         return {
-          id: board.id,
-          name: board.name,
-          order: board.order,
-          owner_id: board.owner_id,
-          project_id: board.project_id,
-          created_at: board.created_at,
+          id: column.id,
+          name: column.name,
+          order: column.order,
+          owner_id: column.owner_id,
+          project_id: column.project_id,
+          created_at: column.created_at,
         };
       });
 
@@ -238,31 +238,31 @@ const ProjectPage = () => {
     if (type === "task") {
       let newBoardsData = [...columns];
       const sourceBoard = newBoardsData.find(
-        (board) => board.id === source.droppableId
+        (column) => column.id === source.droppableId
       );
 
       const destinationBoard = newBoardsData.find(
-        (board) => board.id === destination.droppableId
+        (column) => column.id === destination.droppableId
       );
 
       if (!sourceBoard || !destinationBoard) {
-        console.log("Board not found");
+        console.log("column not found");
         return;
       }
 
-      // Check if tasks exists on the source board
+      // Check if tasks exists on the source column
       if (!sourceBoard.tasks) {
         console.log("No tasks found");
         sourceBoard.tasks = [];
       }
 
-      // Check if tasks exists on the destination board
+      // Check if tasks exists on the destination column
       if (!destinationBoard.tasks) {
         console.log("No tasks found");
         destinationBoard.tasks = [];
       }
 
-      // Moving task within the same board
+      // Moving task within the same column
       if (source.droppableId === destination.droppableId) {
         const reorderedCards = reorder(
           sourceBoard.tasks,
@@ -281,28 +281,28 @@ const ProjectPage = () => {
 
         handleUpdateTasks(sourceBoard.tasks);
       } else {
-        // Moving task to another board
+        // Moving task to another column
         const [removed] = sourceBoard.tasks.splice(source.index, 1);
         removed.column_id = destination.droppableId;
         removed.order = destination.index;
         destinationBoard.tasks.splice(destination.index, 0, removed);
 
-        // Update order of source board
+        // Update order of source column
         sourceBoard.tasks.forEach((task, idx) => {
           task.order = idx;
         });
 
-        // Update order of destination board
+        // Update order of destination column
         destinationBoard.tasks.forEach((task, idx) => {
           task.order = idx;
         });
 
         setBoards(newBoardsData);
 
-        // Trigger Tasks update for source board
+        // Trigger Tasks update for source column
         handleUpdateTasks(sourceBoard.tasks);
 
-        // Trigger Tasks update for destination board
+        // Trigger Tasks update for destination column
         handleUpdateTasks(destinationBoard.tasks);
       }
     }
@@ -345,7 +345,7 @@ const ProjectPage = () => {
         </span>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="columns" type="board" direction="horizontal">
+        <Droppable droppableId="columns" type="column" direction="horizontal">
           {(provided) => (
             <div
               {...provided.droppableProps}
@@ -354,14 +354,14 @@ const ProjectPage = () => {
             >
               {columns
                 .sort((a, b) => a.order - b.order)
-                .map((board, idx) => {
+                .map((column, idx) => {
                   return (
-                    <Board
+                    <Column
                       onDeleteBoard={handleDeleteBoard}
                       onAddTask={handleAddTask}
                       onDeleteTask={handleDeleteTask}
-                      board={board}
-                      key={board.id}
+                      column={column}
+                      key={column.id}
                       idx={idx}
                     />
                   );
@@ -376,7 +376,7 @@ const ProjectPage = () => {
                   value={newBoardName}
                   onChange={(e) => setNewBoardName(e.target.value)}
                   className="w-full focus:bg-[#282828] bg-[#191919] rounded-sm h-full  border-none outline-none text-sm text-zinc-400 p-1 placeholder-zinc-200"
-                  placeholder="+ New Board"
+                  placeholder="+ New column"
                 />
                 {newBoardName.length > 0 && (
                   <button

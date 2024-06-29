@@ -33,7 +33,7 @@ export type TaskFormValues = {
 export const dummyKanbanBoard: KanbanBoard = {
   created_at: "2024-01-01T00:00:00Z",
   id: "kanban_board_1",
-  name: "Main Kanban Board",
+  name: "Main Kanban column",
   order: 1,
   owner_id: "user_1",
   columns: [

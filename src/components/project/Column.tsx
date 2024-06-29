@@ -4,21 +4,21 @@ import Task from "./Task";
 import CreateTask from "./CreateTask";
 type Props = {
   idx: number;
-  board: BoardWithTasks;
+  column: BoardWithTasks;
   onDeleteTask: (taskId: string) => Promise<void>;
   onDeleteBoard: (boardId: string) => Promise<void>;
   onAddTask: (task: TasksTable) => Promise<void>;
 };
 
-const Board = ({
-  board,
+const Column = ({
+  column,
   idx,
   onDeleteTask,
   onAddTask,
   onDeleteBoard,
 }: Props) => {
   return (
-    <Draggable draggableId={board.id} index={idx}>
+    <Draggable draggableId={column.id} index={idx}>
       {(provided) => (
         <div
           {...provided.draggableProps}
@@ -27,22 +27,22 @@ const Board = ({
         >
           <div {...provided.dragHandleProps} className="">
             <div className="mb-1 rounded-sm px-1 group flex justify-between items-center w-full">
-              <h4 className="text-md  font-semibold">{board.name}</h4>
+              <h4 className="text-md  font-semibold">{column.name}</h4>
               <button
-                onClick={() => onDeleteBoard(board.id)}
+                onClick={() => onDeleteBoard(column.id)}
                 className="text-xs group-hover:opacity-100 p-1 opacity-0 text-gray-500 ml-auto hover:text-red-500 hover:font-semibold"
               >
                 delete
               </button>
             </div>
-            <Droppable droppableId={board.id} type="task">
+            <Droppable droppableId={column.id} type="task">
               {(provided) => (
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   className=" bg-[#202020] w-[270px] rounded-sm p-2 pt-[2px]"
                 >
-                  {board.tasks.map((task, idx) => {
+                  {column.tasks.map((task, idx) => {
                     return (
                       <Task
                         onDeleteTask={onDeleteTask}
@@ -54,8 +54,8 @@ const Board = ({
                   })}
                   {provided.placeholder}
                   <CreateTask
-                    tasks={board.tasks}
-                    column_id={board.id}
+                    tasks={column.tasks}
+                    column_id={column.id}
                     onAddTask={onAddTask}
                   />
                 </div>
@@ -68,4 +68,4 @@ const Board = ({
   );
 };
 
-export default Board;
+export default Column;
