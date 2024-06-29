@@ -1,8 +1,8 @@
 import { TasksTable } from "../../../../supabase/supabase-types";
 import { Draggable } from "@hello-pangea/dnd";
-import Pop1Sound from "../../assets/sounds/pop1.wav";
-import Pop2Sound from "../../assets/sounds/pop2.wav";
-import Pop3Sound from "../../assets/sounds/pop3.wav";
+import Pop1Sound from "../../../../assets/sounds/pop1.wav";
+import Pop2Sound from "../../../../assets/sounds/pop2.wav";
+import Pop3Sound from "../../../../assets/sounds/pop3.wav";
 type Props = {
   task: TasksTable;
   idx: number;
@@ -15,7 +15,7 @@ const Task = ({ task, idx, onDeleteTask }: Props) => {
   };
   const handleDelete = async () => {
     const audio = new Audio(getRandomSound());
-    audio.volume = 0.2;
+    audio.volume = 0.7;
     audio.playbackRate = 1;
     audio.play();
     await onDeleteTask(task.id);

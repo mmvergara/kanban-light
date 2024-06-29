@@ -3,7 +3,7 @@ import supabase from "../../supabase";
 import { getRandomQuote } from "../../utils/quotes";
 import { Link } from "react-router-dom";
 import Clock from "./Clock";
-import CreateProject from "../CreateProject";
+import CreateProject from "./CreateProject";
 import { ProjectsTable } from "../../supabase/supabase-types";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
