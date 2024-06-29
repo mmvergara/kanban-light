@@ -14,3 +14,7 @@ Open source light weight kanban board
   - 💼 Stores and Load latest state and sync afterwards
 - ✅ Create and Delete Projects, Columns and Tasks
 - 📝 Drag and Drop Column and Tasks
+
+## Made using
+
+- [React Supabase Auth Template](https://github.com/mmvergara/react-supabase-auth-template)
