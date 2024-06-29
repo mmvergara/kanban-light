@@ -55,7 +55,7 @@ const Board = ({
                   {provided.placeholder}
                   <CreateTask
                     tasks={board.tasks}
-                    board_id={board.id}
+                    column_id={board.id}
                     onAddTask={onAddTask}
                   />
                 </div>

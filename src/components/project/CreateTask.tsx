@@ -4,11 +4,11 @@ import { useSession } from "../../context/SessionContext";
 import { v4 as uuidv4 } from "uuid";
 type Props = {
   tasks: TasksTable[];
-  board_id: string;
+  column_id: string;
   onAddTask: (task: TasksTable) => Promise<void>;
 };
 
-const CreateTask = ({ tasks, board_id, onAddTask }: Props) => {
+const CreateTask = ({ tasks, column_id, onAddTask }: Props) => {
   const { user } = useSession();
   const [taskName, setTaskName] = useState<string>("");
   const [isCreatingTask, setIsCreatingTask] = useState<boolean>(false);
@@ -19,7 +19,7 @@ const CreateTask = ({ tasks, board_id, onAddTask }: Props) => {
     if (!user) return;
     const newTask: TasksTable = {
       id: uuidv4(),
-      board_id: board_id,
+      column_id: column_id,
       name: taskName,
       owner_id: user.id,
       order: tasks.length,

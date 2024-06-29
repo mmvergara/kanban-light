@@ -25,8 +25,8 @@ const ProjectPage = () => {
   const params = useParams();
   const projectId = params.projectId!;
   const { user } = useSession();
-  const [localBoards, setLocalBoards] = useLocalStorage<KanbanBoard["boards"]>(
-    `${projectId}-boards`,
+  const [localBoards, setLocalBoards] = useLocalStorage<KanbanBoard["columns"]>(
+    `${projectId}-columns`,
     []
   );
   const [localProjectData, setLocalProjectData] =
@@ -34,7 +34,7 @@ const ProjectPage = () => {
   const [projectData, setProjectData] = useState<KanbanBoard | null>(
     localProjectData
   );
-  const [boards, setBoards] = useState<KanbanBoard["boards"]>(localBoards);
+  const [columns, setBoards] = useState<KanbanBoard["columns"]>(localBoards);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [newBoardName, setNewBoardName] = useState<string>("");
   const [projectExists, setProjectExists] = useState<boolean>(true);
@@ -64,23 +64,23 @@ const ProjectPage = () => {
     if (newBoardName.trim() === "") return;
     const newBoard = {
       name: newBoardName,
-      order: boards.length,
+      order: columns.length,
       owner_id: user?.id,
       project_id: projectId,
     };
     const { data, error } = await supabase
-      .from("boards")
+      .from("columns")
       .insert(newBoard)
       .select("*")
       .maybeSingle();
     if (error) {
       console.error(error);
       toast.error("Failed to create board");
-      setBoards(boards);
+      setBoards(columns);
     }
     if (data) {
       const newBoard: BoardWithTasks = { ...data, tasks: [] };
-      setBoards([...boards, newBoard]);
+      setBoards([...columns, newBoard]);
     }
     setNewBoardName("");
   };
@@ -91,7 +91,7 @@ const ProjectPage = () => {
     });
 
     setIsLoading(true);
-    const { error } = await supabase.from("boards").delete().eq("id", boardId);
+    const { error } = await supabase.from("columns").delete().eq("id", boardId);
     setIsLoading(false);
     if (error) {
       console.error(error);
@@ -100,8 +100,8 @@ const ProjectPage = () => {
     }
   };
   const handleAddTask = async (task: TasksTable) => {
-    const newBoards = boards.map((board) => {
-      if (board.id === task.board_id) {
+    const newBoards = columns.map((board) => {
+      if (board.id === task.column_id) {
         if (!board.tasks) {
           board.tasks = [];
         }
@@ -122,13 +122,13 @@ const ProjectPage = () => {
     if (error) {
       console.error(error);
       toast.error("Failed to create task");
-      setBoards(boards);
+      setBoards(columns);
     }
   };
   const handleGetProjectData = async () => {
     const { data, error } = await supabase
       .from("projects")
-      .select("*,boards(*,tasks(*))")
+      .select("*,columns(*,tasks(*))")
       .eq("id", projectId);
     setIsLoading(false);
     if (error) {
@@ -137,17 +137,17 @@ const ProjectPage = () => {
     }
     if (data && data.length == 1) {
       const projectData = data[0] as KanbanBoard;
-      setBoards(projectData.boards);
+      setBoards(projectData.columns);
       setProjectData(projectData);
     }
   };
   const handleUpdateBoards = async (board: BoardsTable[]) => {
     setIsLoading(true);
-    const { error } = await supabase.from("boards").upsert(board);
+    const { error } = await supabase.from("columns").upsert(board);
     if (error) {
       console.error(error);
-      toast.error("Failed to update boards");
-      setBoards(boards);
+      toast.error("Failed to update columns");
+      setBoards(columns);
     }
     setIsLoading(false);
   };
@@ -157,7 +157,7 @@ const ProjectPage = () => {
     if (error) {
       console.error(error);
       toast.error("Failed to update tasks");
-      setBoards(boards);
+      setBoards(columns);
       setIsLoading(false);
     }
     setIsLoading(false);
@@ -183,9 +183,9 @@ const ProjectPage = () => {
   };
 
   useEffect(() => {
-    setLocalBoards(boards);
+    setLocalBoards(columns);
     setLocalProjectData(projectData);
-  }, [boards, projectData]);
+  }, [columns, projectData]);
 
   useEffect(() => {
     handleGetProjectData();
@@ -211,14 +211,14 @@ const ProjectPage = () => {
     // User moves a board
     if (type === "board") {
       console.log("board move");
-      const newBoards = reorder(boards, source.index, destination.index).map(
+      const newBoards = reorder(columns, source.index, destination.index).map(
         (board, idx) => {
           return { ...board, order: idx };
         }
       );
 
       setBoards(newBoards);
-      // Trigger Boards update
+      // Trigger columns update
       const newBoardsData: BoardsTable[] = newBoards.map((board) => {
         return {
           id: board.id,
@@ -235,7 +235,7 @@ const ProjectPage = () => {
 
     // User moves a task
     if (type === "task") {
-      let newBoardsData = [...boards];
+      let newBoardsData = [...columns];
       const sourceBoard = newBoardsData.find(
         (board) => board.id === source.droppableId
       );
@@ -282,7 +282,7 @@ const ProjectPage = () => {
       } else {
         // Moving task to another board
         const [removed] = sourceBoard.tasks.splice(source.index, 1);
-        removed.board_id = destination.droppableId;
+        removed.column_id = destination.droppableId;
         removed.order = destination.index;
         destinationBoard.tasks.splice(destination.index, 0, removed);
 
@@ -329,14 +329,14 @@ const ProjectPage = () => {
         </span>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="boards" type="board" direction="horizontal">
+        <Droppable droppableId="columns" type="board" direction="horizontal">
           {(provided) => (
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
               className="h-full flex   gap-1"
             >
-              {boards
+              {columns
                 .sort((a, b) => a.order - b.order)
                 .map((board, idx) => {
                   return (

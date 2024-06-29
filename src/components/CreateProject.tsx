@@ -20,7 +20,7 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
       .from("projects")
       .insert({
         name: projectName,
-        owner: user.id,
+        owner_id: user.id,
         order: highestOrder + 100,
       })
       .select("*");

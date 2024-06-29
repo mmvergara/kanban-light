@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      boards: {
+      columns: {
         Row: {
           created_at: string;
           id: string;
@@ -36,14 +36,14 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "boards_owner_id_fkey";
+            foreignKeyName: "columns_owner_id_fkey";
             columns: ["owner_id"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "boards_project_id_fkey";
+            foreignKeyName: "columns_project_id_fkey";
             columns: ["project_id"];
             isOneToOne: false;
             referencedRelation: "projects";
@@ -57,43 +57,9 @@ export type Database = {
           id: string;
           name: string;
           order: number;
-          owner: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          name: string;
-          order: number;
-          owner: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          name?: string;
-          order?: number;
-          owner?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "project_owner_fkey";
-            columns: ["owner"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
-      tasks: {
-        Row: {
-          board_id: string | null;
-          created_at: string;
-          id: string;
-          name: string;
-          order: number;
           owner_id: string;
         };
         Insert: {
-          board_id?: string | null;
           created_at?: string;
           id?: string;
           name: string;
@@ -101,7 +67,6 @@ export type Database = {
           owner_id: string;
         };
         Update: {
-          board_id?: string | null;
           created_at?: string;
           id?: string;
           name?: string;
@@ -110,10 +75,52 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "tasks_board_id_fkey";
-            columns: ["board_id"];
+            foreignKeyName: "projects_owner_fkey";
+            columns: ["owner_id"];
             isOneToOne: false;
-            referencedRelation: "boards";
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "projects_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      tasks: {
+        Row: {
+          column_id: string;
+          created_at: string;
+          id: string;
+          name: string;
+          order: number;
+          owner_id: string;
+        };
+        Insert: {
+          column_id: string;
+          created_at?: string;
+          id?: string;
+          name: string;
+          order: number;
+          owner_id: string;
+        };
+        Update: {
+          column_id?: string;
+          created_at?: string;
+          id?: string;
+          name?: string;
+          order?: number;
+          owner_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tasks_column_id_fkey";
+            columns: ["column_id"];
+            isOneToOne: false;
+            referencedRelation: "columns";
             referencedColumns: ["id"];
           },
           {
