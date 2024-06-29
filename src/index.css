@@ -77,3 +77,8 @@ body {
     transform: translate(24px, 0);
   }
 }
+
+/* In your CSS file */
+.hover-fill-red:hover {
+  fill: rgb(68, 9, 9);
+}
