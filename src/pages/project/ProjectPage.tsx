@@ -1,7 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import supabase from "../../supabase";
 import {
-  BoardsTable,
+  ColumnTable,
   BoardWithTasks,
   KanbanBoard,
   TasksTable,
@@ -25,7 +25,7 @@ const ProjectPage = () => {
   const params = useParams();
   const projectId = params.projectId!;
   const { user } = useSession();
-  const [localBoards, setLocalBoards] = useLocalStorage<KanbanBoard["columns"]>(
+  const [localColumn, setLocalColumn] = useLocalStorage<KanbanBoard["columns"]>(
     `${projectId}-columns`,
     []
   );
@@ -34,7 +34,7 @@ const ProjectPage = () => {
   const [projectData, setProjectData] = useState<KanbanBoard | null>(
     localProjectData
   );
-  const [columns, setBoards] = useState<KanbanBoard["columns"]>(localBoards);
+  const [columns, setColumn] = useState<KanbanBoard["columns"]>(localColumn);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [newBoardName, setNewBoardName] = useState<string>("");
   const [projectExists, setProjectExists] = useState<boolean>(true);
@@ -53,7 +53,7 @@ const ProjectPage = () => {
       return;
     }
     // reload page
-    setLocalBoards([]);
+    setLocalColumn([]);
     setLocalProjectData(null);
     navigate("/app");
     window.location.reload();
@@ -77,18 +77,18 @@ const ProjectPage = () => {
     if (error) {
       console.error(error);
       toast.error("Failed to create column");
-      setBoards(columns);
+      setColumn(columns);
     }
     if (data) {
       const newBoard: BoardWithTasks = { ...data, tasks: [] };
-      setBoards([...columns, newBoard]);
+      setColumn([...columns, newBoard]);
     }
     setNewBoardName("");
   };
   const handleDeleteBoard = async (boardId: string) => {
-    setBoards((prevBoards) => {
-      const newBoards = prevBoards.filter((column) => column.id !== boardId);
-      return newBoards;
+    setColumn((prevColumn) => {
+      const newColumn = prevColumn.filter((column) => column.id !== boardId);
+      return newColumn;
     });
 
     setIsLoading(true);
@@ -101,7 +101,7 @@ const ProjectPage = () => {
     }
   };
   const handleAddTask = async (task: TasksTable) => {
-    const newBoards = columns.map((column) => {
+    const newColumn = columns.map((column) => {
       if (column.id === task.column_id) {
         if (!column.tasks) {
           column.tasks = [];
@@ -111,7 +111,7 @@ const ProjectPage = () => {
       return column;
     });
 
-    setBoards(newBoards);
+    setColumn(newColumn);
 
     setIsLoading(true);
     const { error } = await supabase
@@ -123,7 +123,7 @@ const ProjectPage = () => {
     if (error) {
       console.error(error);
       toast.error("Failed to create task");
-      setBoards(columns);
+      setColumn(columns);
     }
   };
   const handleGetProjectData = async () => {
@@ -138,17 +138,17 @@ const ProjectPage = () => {
     }
     if (data && data.length == 1) {
       const projectData = data[0] as KanbanBoard;
-      setBoards(projectData.columns);
+      setColumn(projectData.columns);
       setProjectData(projectData);
     }
   };
-  const handleUpdateBoards = async (column: BoardsTable[]) => {
+  const handleUpdateColumn = async (column: ColumnTable[]) => {
     setIsLoading(true);
     const { error } = await supabase.from("columns").upsert(column);
     if (error) {
       console.error(error);
       toast.error("Failed to update columns");
-      setBoards(columns);
+      setColumn(columns);
     }
     setIsLoading(false);
   };
@@ -158,19 +158,19 @@ const ProjectPage = () => {
     if (error) {
       console.error(error);
       toast.error("Failed to update tasks");
-      setBoards(columns);
+      setColumn(columns);
       setIsLoading(false);
     }
     setIsLoading(false);
   };
   const handleDeleteTask = async (taskId: string) => {
-    setBoards((prevBoards) => {
-      const newBoards = prevBoards.map((column) => {
+    setColumn((prevColumn) => {
+      const newColumn = prevColumn.map((column) => {
         if (!column.tasks) return column;
         const newTasks = column.tasks.filter((task) => task.id !== taskId);
         return { ...column, tasks: newTasks };
       });
-      return newBoards;
+      return newColumn;
     });
 
     setIsLoading(true);
@@ -184,7 +184,7 @@ const ProjectPage = () => {
   };
 
   useEffect(() => {
-    setLocalBoards(columns);
+    setLocalColumn(columns);
     setLocalProjectData(projectData);
   }, [columns, projectData]);
 
@@ -212,15 +212,15 @@ const ProjectPage = () => {
     // User moves a column
     if (type === "column") {
       console.log("column move");
-      const newBoards = reorder(columns, source.index, destination.index).map(
+      const newColumn = reorder(columns, source.index, destination.index).map(
         (column, idx) => {
           return { ...column, order: idx };
         }
       );
 
-      setBoards(newBoards);
+      setColumn(newColumn);
       // Trigger columns update
-      const newBoardsData: BoardsTable[] = newBoards.map((column) => {
+      const newColumnData: ColumnTable[] = newColumn.map((column) => {
         return {
           id: column.id,
           name: column.name,
@@ -231,17 +231,17 @@ const ProjectPage = () => {
         };
       });
 
-      handleUpdateBoards(newBoardsData);
+      handleUpdateColumn(newColumnData);
     }
 
     // User moves a task
     if (type === "task") {
-      let newBoardsData = [...columns];
-      const sourceBoard = newBoardsData.find(
+      let newColumnData = [...columns];
+      const sourceBoard = newColumnData.find(
         (column) => column.id === source.droppableId
       );
 
-      const destinationBoard = newBoardsData.find(
+      const destinationBoard = newColumnData.find(
         (column) => column.id === destination.droppableId
       );
 
@@ -275,7 +275,7 @@ const ProjectPage = () => {
         });
 
         sourceBoard.tasks = reorderedCards;
-        setBoards(newBoardsData);
+        setColumn(newColumnData);
 
         // Trigger Tasks update
 
@@ -297,7 +297,7 @@ const ProjectPage = () => {
           task.order = idx;
         });
 
-        setBoards(newBoardsData);
+        setColumn(newColumnData);
 
         // Trigger Tasks update for source column
         handleUpdateTasks(sourceBoard.tasks);

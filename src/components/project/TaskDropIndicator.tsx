@@ -1,4 +1,4 @@
-import { BoardsTable } from "../../supabase/supabase-types";
+import { ColumnTable } from "../../supabase/supabase-types";
 
 const TaskDropIndicator = ({
   beforeId,
@@ -7,7 +7,7 @@ const TaskDropIndicator = ({
 }: {
   beforeId: string;
   taskOrder: number;
-  column: BoardsTable;
+  column: ColumnTable;
 }) => {
   return (
     <div
