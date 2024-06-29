@@ -1,26 +1,12 @@
 import { TasksTable } from "../../../../supabase/supabase-types";
 import { Draggable } from "@hello-pangea/dnd";
-import Pop1Sound from "../../../../assets/sounds/pop1.wav";
-import Pop2Sound from "../../../../assets/sounds/pop2.wav";
-import Pop3Sound from "../../../../assets/sounds/pop3.wav";
+
 type Props = {
   task: TasksTable;
   idx: number;
   onDeleteTask: (taskId: string) => Promise<void>;
 };
 const Task = ({ task, idx, onDeleteTask }: Props) => {
-  const sounds = [Pop1Sound, Pop2Sound, Pop3Sound];
-  const getRandomSound = () => {
-    return sounds[Math.floor(Math.random() * sounds.length)];
-  };
-  const handleDelete = async () => {
-    const audio = new Audio(getRandomSound());
-    audio.volume = 0.7;
-    audio.playbackRate = 1;
-    audio.play();
-    await onDeleteTask(task.id);
-  };
-
   return (
     <Draggable draggableId={task.id} index={idx}>
       {(provided) => (
@@ -38,7 +24,7 @@ const Task = ({ task, idx, onDeleteTask }: Props) => {
           </div>
           <div className="flex justify-end">
             <button
-              onClick={handleDelete}
+              onClick={() => onDeleteTask(task.id)}
               className="text-xs group-hover:opacity-100 p-1 opacity-0 ml-auto  text-red-500 hover:font-semibold transition-colors"
             >
               <svg

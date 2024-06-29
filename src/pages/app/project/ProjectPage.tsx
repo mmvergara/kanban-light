@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useSession } from "../../../context/SessionContext";
 import Column from "./components/Column";
+import { playPopSound } from "../../../utils/soundfx";
 
 const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
   const result = Array.from(list);
@@ -90,7 +91,7 @@ const ProjectPage = () => {
       const newColumn = prevColumn.filter((column) => column.id !== boardId);
       return newColumn;
     });
-
+    playPopSound();
     setIsLoading(true);
     const { error } = await supabase.from("columns").delete().eq("id", boardId);
     setIsLoading(false);
@@ -164,6 +165,7 @@ const ProjectPage = () => {
     setIsLoading(false);
   };
   const handleDeleteTask = async (taskId: string) => {
+    playPopSound();
     setColumn((prevColumn) => {
       const newColumn = prevColumn.map((column) => {
         if (!column.tasks) return column;
