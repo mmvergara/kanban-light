@@ -56,6 +56,7 @@ const ProjectPage = () => {
     setLocalBoards([]);
     setLocalProjectData(null);
     navigate("/app");
+    window.location.reload();
     toast.success("Project deleted successfully");
   };
   const handleAddNewBoard = async (e: FormEvent) => {
@@ -314,9 +315,24 @@ const ProjectPage = () => {
           <h1 className="text-xl">{projectData?.name}</h1>
           <button
             onClick={handleDeleteProject}
-            className="text-xs group-hover:opacity-100 opacity-0 ml-auto hover:text-red-500 hover:font-semibold"
+            className="text-xs group-hover:opacity-100 p-1 opacity-0 ml-auto  text-red-500 hover:font-semibold transition-colors"
           >
-            delete
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="hover-fill-red"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15 9-6 6" />
+              <path d="m9 9 6 6" />
+            </svg>
           </button>
         </div>
         <span
