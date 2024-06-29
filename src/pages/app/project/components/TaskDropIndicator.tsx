@@ -1,4 +1,4 @@
-import { ColumnTable } from "../../supabase/supabase-types";
+import { ColumnTable } from "../../../../supabase/supabase-types";
 
 const TaskDropIndicator = ({
   beforeId,

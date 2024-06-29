@@ -1,17 +1,17 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import supabase from "../../supabase";
+import supabase from "../../../supabase";
 import {
   ColumnTable,
   BoardWithTasks,
   KanbanBoard,
   TasksTable,
-} from "../../supabase/supabase-types";
+} from "../../../supabase/supabase-types";
 import { FormEvent, useEffect, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { useSession } from "../../context/SessionContext";
-import Column from "../../components/project/Column";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useSession } from "../../../context/SessionContext";
+import Column from "./components/Column";
 
 const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
   const result = Array.from(list);

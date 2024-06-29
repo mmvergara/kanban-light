@@ -3,7 +3,8 @@ import HomePage from "../pages/HomePage.tsx";
 import NotFoundPage from "../pages/404Page.tsx";
 import AuthProtectedRoute from "./AuthProtectedRoute.tsx";
 import Providers from "../Providers.tsx";
-import ProjectPage from "../pages/project/ProjectPage.tsx";
+import ProjectPage from "../pages/app/project/ProjectPage.tsx";
+import DashboardPage from "../pages/app/DashboardPage.tsx";
 
 const router = createBrowserRouter([
   // I recommend you reflect the routes here in the pages folder
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
         path: "/app",
         element: <AuthProtectedRoute />,
         children: [
+          {
+            path: "/app",
+            element: <DashboardPage />,
+          },
           {
             path: ":projectId",
             element: <ProjectPage />,

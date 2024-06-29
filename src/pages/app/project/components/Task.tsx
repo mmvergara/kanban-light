@@ -1,4 +1,4 @@
-import { TasksTable } from "../../supabase/supabase-types";
+import { TasksTable } from "../../../../supabase/supabase-types";
 import { Draggable } from "@hello-pangea/dnd";
 import Pop1Sound from "../../assets/sounds/pop1.wav";
 import Pop2Sound from "../../assets/sounds/pop2.wav";

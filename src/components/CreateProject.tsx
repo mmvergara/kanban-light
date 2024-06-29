@@ -2,6 +2,8 @@ import { FormEvent, useState } from "react";
 import supabase from "../supabase";
 import { useSession } from "../context/SessionContext";
 import { ProjectsTable } from "../supabase/supabase-types";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   highestOrder: number;
@@ -10,6 +12,7 @@ type Props = {
 
 const CreateProject = ({ highestOrder, onNewProject }: Props) => {
   const { user } = useSession();
+  const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>("");
   const handleCreateProject = async (e: FormEvent) => {
@@ -31,6 +34,8 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
       console.error(error);
       return;
     }
+    toast.success("Project created");
+    navigate(`/app/${data[0].id}`);
     setProjectName("");
     setIsCreating(false);
   };

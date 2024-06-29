@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
-import { TasksTable } from "../../supabase/supabase-types";
-import { useSession } from "../../context/SessionContext";
+import { TasksTable } from "../../../../supabase/supabase-types";
+import { useSession } from "../../../../context/SessionContext";
 import { v4 as uuidv4 } from "uuid";
 type Props = {
   tasks: TasksTable[];

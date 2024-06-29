@@ -1,4 +1,7 @@
-import { BoardWithTasks, TasksTable } from "../../supabase/supabase-types";
+import {
+  BoardWithTasks,
+  TasksTable,
+} from "../../../../supabase/supabase-types";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import Task from "./Task";
 import CreateTask from "./CreateTask";
