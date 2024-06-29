@@ -2,7 +2,7 @@
   <img src="./public/logo.png " width="200" height="200" />
 </p>
 <h4 align="center">
-Kanban Light
+<a href="https://kanban-light.vercel.app/">Kanban Board</a>
 </h4>
 <p align="center">
 Open source light weight kanban board
@@ -10,7 +10,7 @@ Open source light weight kanban board
 
 ## Features
 
-- Very Fast Initial Load 🔥 using Local Storage
-  - Stores and Load latest state and sync afterwards
+- 🔥 No Initial Load utilizing Local Storage
+  - 💼 Stores and Load latest state and sync afterwards
 - ✅ Create and Delete Projects, Columns and Tasks
 - 📝 Drag and Drop Column and Tasks
