@@ -14,6 +14,9 @@ const HomePage = () => {
     setIsLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/app`,
+      },
     });
     if (error) {
       toast.error(error.message);
