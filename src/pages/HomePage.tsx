@@ -25,14 +25,20 @@ const HomePage = () => {
 
   return (
     <div className="flex justify-center items-center w-full">
-      <div className="flex justify-center items-center flex-col p-10 mx-auto bg-[#202020]">
+      <div className="flex justify-center items-center flex-col p-10 mx-auto bg-[#303030] max-w-[400px] w-full rounded-lg">
+        <img
+          src="/logo.png"
+          alt="logo"
+          width="150"
+          height="150"
+          className="mb-2"
+        />
         <h1 className="text-3xl">Kanban Light</h1>
         <p className="mb-8 text-md">Open source light weight kanban column.</p>
-
         <button
           onClick={handleSignInWithGithub}
           disabled={isLoading}
-          className="flex items-center justify-center gap-2 bg-zinc-800 px-4 drop-shadow-xl shadow-2xl rounded-md"
+          className="flex items-center justify-center gap-2 bg-zinc-900 mb-2 px-4 drop-shadow-xl shadow-2xl rounded-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
