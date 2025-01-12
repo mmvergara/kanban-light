@@ -1,0 +1,25 @@
+{
+  "name": "bot-and-api",
+  "type": "module",
+  "module": "src/index.ts",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch run src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.12",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.13.0",
+    "@types/bun": "latest",
+    "@types/express": "^5.0.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-format": "^1.0.1"
+  }
+}

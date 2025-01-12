@@ -23,7 +23,10 @@ const Sidebar = () => {
   };
 
   const handleGetProjects = async () => {
-    const { data, error } = await supabase.from("projects").select("*");
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: true });
     if (error) {
       console.error(error);
       setIsloading(false);
@@ -43,8 +46,8 @@ const Sidebar = () => {
   useEffect(() => {
     setLocalProjects(projects);
   }, [projects]);
+
   // #e9e9e9
-  const highestOrder = Math.max(...projects.map((p) => p.order), 0);
   return (
     <aside className="bg-[#202020] w-[240px] drop-shadow-xl flex flex-col justify-between p-2">
       <section className="w-full flex flex-col">
@@ -105,7 +108,6 @@ const Sidebar = () => {
           </div>
         ) : (
           <CreateProject
-            highestOrder={highestOrder}
             onNewProject={(p) => {
               setProjects([...projects, p]);
             }}

@@ -6,11 +6,10 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
-  highestOrder: number;
   onNewProject: (project: ProjectsTable) => void;
 };
 
-const CreateProject = ({ highestOrder, onNewProject }: Props) => {
+const CreateProject = ({ onNewProject }: Props) => {
   const { user } = useSession();
   const navigate = useNavigate();
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -24,7 +23,6 @@ const CreateProject = ({ highestOrder, onNewProject }: Props) => {
       .insert({
         name: projectName,
         owner_id: user.id,
-        order: highestOrder + 100,
       })
       .select("*");
     if (data && data.length == 1) {
