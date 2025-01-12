@@ -1,8 +1,22 @@
 drop table if exists public.tasks;
 drop table if exists public.columns;
 drop table if exists public.projects;
+drop table if exists public.binding_keys;
 
+create table
+  public.binding_keys(
+    id uuid not null default gen_random_uuid(),
+    owner_id uuid not null,
+    key uuid not null default gen_random_uuid(),
+    constraint binding_keys_pkey primary key (id),
+    constraint binding_keys_owner_id_fkey foreign key (owner_id) references auth.users (id) on update cascade on delete cascade
+  ) tablespace pg_default;
+alter table binding_keys enable row level security;
 
+create policy "Enable users to access their own binding_keys"
+on "public"."binding_keys"
+to authenticated
+using (auth.uid() = owner_id);
 
 create table
   public.projects (
@@ -16,7 +30,7 @@ create table
   ) tablespace pg_default;
 alter table projects enable row level security;
 
-create policy "Enable users to access their own data"
+create policy "Enable users to access their own projects"
 on "public"."projects"
 to authenticated
 using (auth.uid() = owner_id);
@@ -36,7 +50,7 @@ create table
   ) tablespace pg_default;
 alter table columns enable row level security;
 
-create policy "Enable users to access their own data"
+create policy "Enable users to access their own columns"
 on "public"."columns"
 to authenticated
 using (auth.uid() = owner_id);
@@ -55,7 +69,7 @@ create table
   ) tablespace pg_default;
 alter table tasks enable row level security;
 
-create policy "Enable users to access their own data"
+create policy "Enable users to access their own tasks"
 on "public"."tasks"
 to authenticated
 using (auth.uid() = owner_id);
