@@ -6,9 +6,8 @@ import { useState } from "react";
 
 const HomePage = () => {
   const { session } = useSession();
-  if (session) return <Navigate to="/app" />;
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  if (session) return <Navigate to="/app" />;
 
   const handleSignInWithGithub = async () => {
     setIsLoading(true);
