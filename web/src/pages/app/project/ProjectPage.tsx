@@ -238,7 +238,7 @@ const ProjectPage = () => {
 
     // User moves a task
     if (type === "task") {
-      let newColumnData = [...columns];
+      const newColumnData = [...columns];
       const sourceBoard = newColumnData.find(
         (column) => column.id === source.droppableId
       );

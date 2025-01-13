@@ -15,7 +15,7 @@ export default antfu(
   },
   {
     rules: {
-      "no-console": ["warn"],
+      "no-console": ["off"],
       "antfu/no-top-level-await": ["off"],
       "style/comma-dangle": "off",
     },

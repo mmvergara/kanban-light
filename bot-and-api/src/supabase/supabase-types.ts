@@ -9,10 +9,10 @@ export type Json =
 export interface Database {
   graphql_public: {
     Tables: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     Views: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     Functions: {
       graphql: {
@@ -26,31 +26,55 @@ export interface Database {
       };
     };
     Enums: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     CompositeTypes: {
-      [_ in never]: never
+      [_ in never]: never;
     };
   };
   public: {
     Tables: {
-      binding_keys: {
+      binding: {
         Row: {
+          active_column: string | null;
+          active_project: string | null;
+          discord_user_id: number | null;
           id: string;
           key: string;
           owner_id: string;
         };
         Insert: {
+          active_column?: string | null;
+          active_project?: string | null;
+          discord_user_id?: number | null;
           id?: string;
           key?: string;
           owner_id: string;
         };
         Update: {
+          active_column?: string | null;
+          active_project?: string | null;
+          discord_user_id?: number | null;
           id?: string;
           key?: string;
           owner_id?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "binding_active_column_fkey";
+            columns: ["active_column"];
+            isOneToOne: false;
+            referencedRelation: "columns";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "binding_active_project_fkey";
+            columns: ["active_project"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       columns: {
         Row: {
@@ -92,21 +116,18 @@ export interface Database {
           created_at: string;
           id: string;
           name: string;
-          order: number;
           owner_id: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
           name: string;
-          order: number;
           owner_id: string;
         };
         Update: {
           created_at?: string;
           id?: string;
           name?: string;
-          order?: number;
           owner_id?: string;
         };
         Relationships: [];
@@ -148,16 +169,16 @@ export interface Database {
       };
     };
     Views: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never
+      [_ in never]: never;
     };
     CompositeTypes: {
-      [_ in never]: never
+      [_ in never]: never;
     };
   };
 }

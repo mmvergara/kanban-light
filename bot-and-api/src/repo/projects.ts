@@ -1,41 +1,54 @@
+import type { UserID } from "./users";
+import { z } from "zod";
 import { supabase } from "../supabase";
 
-export const getProjectsByUserId = async (userId: string) => {
+export const getProjectsByUserId = async (userId: UserID) => {
   const { data, error } = await supabase
     .from("projects")
-    .select("*")
+    .select("name")
     .eq("owner_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", {
+      ascending: true
+    });
 
   if (error) {
-    return null;
+    return { error: "An error occurred while fetching your projects" } as const;
   }
 
-  return data;
+  return { projects: data.map(project => project.name) } as const;
 };
 
-export const deleteProjectById = async (projectId: string, userId: string) => {
-  const { data, error } = await supabase
+export const createProject = async (userId: UserID, name: string) => {
+  const valid = z.string().min(3).max(50).safeParse(name);
+  if (!valid.success) {
+    return { error: "The project name must be between 3 and 50 characters" } as const;
+  }
+
+  const { error } = await supabase
+    .from("projects")
+    .insert({
+      owner_id: userId,
+      name: valid.data
+    });
+
+  if (error) {
+    return { error: "An error occurred while creating the project" } as const;
+  }
+};
+
+export const deleteProjectByName = async (userId: UserID, name: string) => {
+  const valid = z.string().min(3).max(50).safeParse(name);
+  if (!valid.success) {
+    return { error: "The project name must be between 3 and 50 characters" } as const;
+  }
+
+  const { error } = await supabase
     .from("projects")
     .delete()
-    .eq("id", projectId)
-    .eq("owner_id", userId);
+    .eq("owner_id", userId)
+    .eq("name", valid.data);
 
   if (error) {
-    return null;
+    return { error: "An error occurred while deleting the project" } as const;
   }
-
-  return data;
-};
-
-export const createProject = async (userId: string, name: string) => {
-  const { data, error } = await supabase
-    .from("projects")
-    .insert({ owner_id: userId, name });
-
-  if (error) {
-    return null;
-  }
-
-  return data;
 };

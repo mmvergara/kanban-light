@@ -13,6 +13,11 @@
   - kanly c del "<column_name_or_id>"
 
 - Task
+
   - kanly task list // list all tasks in current column
   - kanly task add "<task_name>" // add new task to current column
   - kanly task del "<task_name_or_id>"
+
+- Client Side Validation
+- API Side Validation
+- RUST CLI Validation
