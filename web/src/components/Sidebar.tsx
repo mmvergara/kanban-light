@@ -7,6 +7,7 @@ import CreateProject from "./CreateProject";
 import { ProjectsTable } from "../supabase/supabase-types";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import BindingKeyModal from "./BindingKeyModal";
 
 const Sidebar = () => {
   const [localProjects, setLocalProjects] = useLocalStorage<ProjectsTable[]>(
@@ -45,7 +46,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     setLocalProjects(projects);
-  }, [projects]);
+  }, [projects, setLocalProjects]);
 
   // #e9e9e9
   return (
@@ -108,10 +109,14 @@ const Sidebar = () => {
           />
         )}
       </section>
-      <div className="bg-[#191919] p-1 px-2 w-fit">
-        <button onClick={handleLogout} className=" hover:text-red-600 text-xs">
+      <div className="bg-[#191919] p-1 px-2 w-full gap-4 flex justify-between items-center">
+        <button onClick={handleLogout} className="hover:text-red-600 text-xs">
           Sign Out
         </button>
+        {/* <Link to="/docs" className="hover:text-emerald-500 text-xs text-center">
+          Docs
+        </Link> */}
+        <BindingKeyModal />
       </div>
     </aside>
   );
