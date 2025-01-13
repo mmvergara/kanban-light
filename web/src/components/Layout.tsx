@@ -1,4 +1,4 @@
-import { useSession } from "../../context/SessionContext";
+import { useSession } from "../context/SessionContext";
 import Sidebar from "./Sidebar";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { SessionProvider } from "./context/SessionContext";
-import Layout from "./components/layout/Layout";
+import Layout from "./components/Layout";
 import { ToastContainer } from "react-toastify";
 
 const Providers = () => {

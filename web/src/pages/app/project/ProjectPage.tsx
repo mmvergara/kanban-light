@@ -11,8 +11,8 @@ import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import { toast } from "react-toastify";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useSession } from "../../../context/SessionContext";
-import Column from "./components/Column";
 import { playPopSound } from "../../../utils/soundfx";
+import Column from "../../../components/Column";
 
 const reorder = <T,>(list: T[], startIdx: number, endIdx: number) => {
   const result = Array.from(list);

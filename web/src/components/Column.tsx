@@ -1,10 +1,8 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import Task from "./Task";
 import CreateTask from "./CreateTask";
-import {
-  BoardWithTasks,
-  TasksTable,
-} from "../../../../supabase/supabase-types";
+import type { BoardWithTasks, TasksTable } from "../supabase/supabase-types";
+import Task from "./Task";
+
 type Props = {
   idx: number;
   column: BoardWithTasks;

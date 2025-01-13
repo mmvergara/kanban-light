@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-import supabase from "../../supabase";
-import { useSession } from "../../context/SessionContext";
-import { ProjectsTable } from "../../supabase/supabase-types";
+import supabase from "../supabase";
+import { useSession } from "../context/SessionContext";
+import { ProjectsTable } from "../supabase/supabase-types";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
