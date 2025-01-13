@@ -1,7 +1,7 @@
 import { type CacheType, type ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { getProjectsByUserId } from "../../../repo/projects";
-import { getUserIdByDiscordUserId } from "../../../repo/users";
 import { errorEmbedReply, infoEmbedReply, } from "../../messages";
+import { getProjectsByUserId } from "../../repo/projects";
+import { getUserIdByDiscordUserId } from "../../repo/users";
 
 export const data = new SlashCommandBuilder().setName("list-projects").setDescription("List all projects");
 

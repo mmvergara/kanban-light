@@ -1,7 +1,7 @@
 import { type CacheType, type ChatInputCommandInteraction, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { z } from "zod";
-import { bindDiscordUser } from "../../../repo/users";
 import { errorEmbedReply, successEmbedReply } from "../../messages";
+import { bindDiscordUser } from "../../repo/users";
 
 export const data = new SlashCommandBuilder()
   .setName("bind")

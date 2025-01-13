@@ -1,11 +1,11 @@
 import { type CacheType, type ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { createProject } from "../../../repo/projects";
-import { getUserIdByDiscordUserId } from "../../../repo/users";
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
+import { createProject } from "../../repo/projects";
+import { getUserIdByDiscordUserId } from "../../repo/users";
 
 export const data = new SlashCommandBuilder()
-  .setName("delete-project")
-  .setDescription("Delete a project")
+  .setName("create-project")
+  .setDescription("Create a new project")
   .addStringOption(option => option.setName("name").setDescription("The name of the project").setRequired(true));
 
 export const execute = async (interaction: ChatInputCommandInteraction<CacheType>) => {

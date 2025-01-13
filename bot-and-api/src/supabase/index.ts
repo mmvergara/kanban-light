@@ -1,10 +1,10 @@
 import type { Database } from "./supabase-types";
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_SERVICE_KEY, SUPABASE_URL } from "../config";
+import config from "../config";
 
 export const supabase = createClient<Database>(
-  SUPABASE_URL,
-  SUPABASE_SERVICE_KEY
+  config.SUPABASE_URL,
+  config.SUPABASE_SERVICE_KEY
 );
 
 export const pingDb = async () => {
