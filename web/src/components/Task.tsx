@@ -1,5 +1,5 @@
-import { TasksTable } from "../../../../supabase/supabase-types";
 import { Draggable } from "@hello-pangea/dnd";
+import { TasksTable } from "../supabase/supabase-types";
 
 type Props = {
   task: TasksTable;
