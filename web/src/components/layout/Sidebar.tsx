@@ -49,11 +49,11 @@ const Sidebar = () => {
 
   // #e9e9e9
   return (
-    <aside className="bg-[#202020] w-[240px] drop-shadow-xl flex flex-col justify-between p-2">
+    <aside className="bg-[#202020] w-[320px] drop-shadow-xl flex flex-col justify-between p-2">
       <section className="w-full flex flex-col">
-        <h1 className="text-center items-center bg-[#191919] p-2 rounded-sm text-emerald-400 mb-1">
-          Kanban Light
-          <p className="text-xs text-center text-zinc-400 mt-1">{quote}</p>
+        <h1 className="text-center items-center bg-[#191919] p-2 rounded-sm  text-emerald-400 mb-1">
+          <span className="text-xl">Kanban Light</span>
+          <p className="text-md text-center text-zinc-400 mt-1">{quote}</p>
         </h1>
         <Clock />
         {projects.map((p) => {
@@ -61,7 +61,7 @@ const Sidebar = () => {
             <Link
               key={p.id}
               to={`/app/${p.id}`}
-              className="p-2 text-sm hover:bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
+              className="p-2 py-4 text-sm hover:bg-[#191919] text-[#b6b6b6] w-full flex items-center gap-1 mb-1 rounded-sm transition-all"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,15 +80,9 @@ const Sidebar = () => {
             </Link>
           );
         })}
-        {/* {isLoading && (
-          <>
-            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
-            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
-            <div className="p-2 text-sm h-[36px] animate-pulse bg-[#353535] w-full flex items-center gap-1 mb-1 rounded-sm transition-all" />
-          </>
-        )} */}
+
         {isLoading ? (
-          <div className="p-2 text-sm hover:bg-[#191919] text-[#919191] w-full flex items-center gap-1 rounded-sm transition-all">
+          <div className="p-2 text-sm hover:bg-[#191919] text-[#5e91cc] w-full flex items-center gap-1 rounded-sm transition-all">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

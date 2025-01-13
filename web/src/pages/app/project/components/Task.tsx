@@ -14,7 +14,7 @@ const Task = ({ task, idx, onDeleteTask }: Props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className="bg-[#2f2f2f] group w-full rounded-sm text-sm mt-1 p-2 font-semibold hover:bg-[#3f3f3f] hover:cursor-grab active:cursor-grabbing"
+          className="bg-[#2f2f2f] group w-full rounded-sm text-md mt-1 p-2  hover:bg-[#3f3f3f] hover:cursor-grab active:cursor-grabbing"
         >
           <div
             {...provided.dragHandleProps}

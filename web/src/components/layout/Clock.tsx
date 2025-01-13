@@ -10,7 +10,7 @@ const Clock = () => {
   }, []);
 
   return (
-    <div className="flex justify-between w-full text-xs my-1 text-zinc-200">
+    <div className="flex justify-between w-full text-sm my-2 text-zinc-200">
       {currentTime.toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "numeric",

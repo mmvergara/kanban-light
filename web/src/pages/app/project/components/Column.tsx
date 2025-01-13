@@ -26,11 +26,11 @@ const Column = ({
         <div
           {...provided.draggableProps}
           ref={provided.innerRef}
-          className="h-full flex py-2  px-2 gap-1 active:border-opacity-100 border-[1px] border-[#2f2f2f] rounded-md border-opacity-0"
+          className="h-full flex py-2 px-2 gap-1 active:border-opacity-100 border-[1px] border-[#2f2f2f] rounded-md border-opacity-0"
         >
           <div {...provided.dragHandleProps} className="">
             <div className="mb-1 rounded-sm px-1 group flex justify-between items-center w-full">
-              <h4 className="text-md  font-semibold">{column.name}</h4>
+              <h4 className="text-lg font-semibold">{column.name}</h4>
               <button
                 onClick={() => onDeleteBoard(column.id)}
                 className="text-xs group-hover:opacity-100 p-1 opacity-0 ml-auto  text-red-500 hover:font-semibold transition-colors"
