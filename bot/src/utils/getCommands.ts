@@ -8,15 +8,22 @@ interface Command {
   dataJson: any;
 }
 
+let cachedCommands: Command[] | null = null;
+
 export const getCommands = async () => {
+  if (cachedCommands) {
+    return cachedCommands;
+  }
+
   const commands: Command[] = [];
   const foldersPath = path.join(path.dirname(__dirname), "commands");
   const commandFolders = fs.readdirSync(foldersPath);
+
   for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
     const commandFiles = fs
       .readdirSync(commandsPath)
-      .filter(file => file.endsWith(".ts"));
+      .filter((file) => file.endsWith(".ts"));
 
     for (const file of commandFiles) {
       const filePath = path.join(commandsPath, file);
@@ -29,13 +36,14 @@ export const getCommands = async () => {
           command,
           dataJson: command.data.toJSON(),
         });
-      }
-      else {
+      } else {
         console.log(
           `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
         );
       }
     }
   }
+
+  cachedCommands = commands;
   return commands;
 };

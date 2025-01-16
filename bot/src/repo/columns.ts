@@ -18,9 +18,11 @@ export const addColumn = async ({
     .limit(1)
     .single();
   if (error) {
-    console.error("Error fetching last column order", error);
     if (error.code !== "PGRST116") {
-      return { error: "Failed to fetch last column order" };
+      return {
+        error:
+          "Failed to fetch last column order, does the project still exist?",
+      };
     }
   }
 
@@ -31,8 +33,7 @@ export const addColumn = async ({
     order: (lastColOrder?.order ?? -1) + 1,
   });
   if (insertErr) {
-    console.error("Error inserting column", insertErr);
-    return { error: "Failed to insert column" };
+    return { error: "Failed to insert column, does the project still exist?" };
   }
 };
 
