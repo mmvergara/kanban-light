@@ -1,5 +1,5 @@
 {
-  "name": "bot-and-api",
+  "name": "kanban-light-discord-bot",
   "type": "module",
   "module": "src/index.ts",
   "scripts": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.47.12",
     "discord.js": "^14.17.3",
+    "uuid": "^11.0.5",
     "zod": "^3.24.1"
   },
   "devDependencies": {
