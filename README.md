@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/logo.png " width="200" height="200" />
+  <img src="logo.png " width="200" height="200" />
 </p>
 <h4 align="center">
 <a href="https://kanban-light.vercel.app/">Kanban Light</a>
@@ -7,10 +7,6 @@
 <p align="center">
 Open source light weight kanban board
 </p>
-
-## TODO
-
-- Style horizontal scrollbar kanban board
 
 ## Features
 

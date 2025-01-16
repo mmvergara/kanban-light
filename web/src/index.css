@@ -16,8 +16,6 @@ body {
   color: white;
 }
 
-/* Loading */
-
 .lds-ellipsis,
 .lds-ellipsis div {
   box-sizing: border-box;
@@ -78,7 +76,34 @@ body {
   }
 }
 
-/* In your CSS file */
 .hover-fill-red:hover {
   fill: rgb(68, 9, 9);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #191919;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #282828;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #636363;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #444444 #191919;
+}
+
+.scrollable {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
