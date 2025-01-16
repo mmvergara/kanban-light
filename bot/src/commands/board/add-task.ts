@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { z } from "zod";
 import { errorEmbedReply, successEmbedReply } from "../../messages";
-import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
+import { checkBinding, type UserID } from "../../repo/users";
 import { columnOrderValidate, taskNameValidate } from "../../utils/validators";
 import { addTask } from "../../repo/tasks";
 
@@ -30,21 +30,9 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const { binding, error: bindErr } = await getBindingByDiscordUserId(
-    interaction.user.id
-  );
-  if (bindErr) {
-    return await interaction.reply(
-      errorEmbedReply("An error occured while adding the task")
-    );
-  }
-
-  if (!binding.active_project) {
-    return await interaction.reply(
-      errorEmbedReply(
-        "You need to set an active project first, use /active-project"
-      )
-    );
+  const binding = await checkBinding(interaction);
+  if (!binding) {
+    return;
   }
 
   const { data, success, error } = addTaskSchema.safeParse({

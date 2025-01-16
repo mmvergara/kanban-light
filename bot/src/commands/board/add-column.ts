@@ -5,7 +5,10 @@ import {
 } from "discord.js";
 import { errorEmbedReply, successEmbedReply } from "../../messages";
 import { addColumn } from "../../repo/columns";
-import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
+import {
+  checkBinding,
+  type UserID,
+} from "../../repo/users";
 import { columnNameValidate } from "../../utils/validators";
 
 export const data = new SlashCommandBuilder()
@@ -22,21 +25,12 @@ export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
   console.log("add-column command executed");
-  const { binding, error: bindErr } = await getBindingByDiscordUserId(
-    interaction.user.id
-  );
-  if (bindErr) {
-    return await interaction.reply(
-      errorEmbedReply("An error occured while adding the column")
-    );
+
+  const binding = await checkBinding(interaction);
+  if (!binding) {
+    return;
   }
-  if (!binding.active_project) {
-    return await interaction.reply(
-      errorEmbedReply(
-        "No active project found, use /activate-project to activate a project"
-      )
-    );
-  }
+
   const { data, error } = columnNameValidate.safeParse(
     interaction.options.getString("column-name")
   );
