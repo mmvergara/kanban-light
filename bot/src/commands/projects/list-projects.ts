@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { getProjectsByUserId } from "../../repo/projects";
-import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
+import { checkBinding } from "../../repo/users";
 
 export const data = new SlashCommandBuilder()
   .setName("list-projects")
@@ -14,15 +14,13 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const discordUserId = interaction.user.id;
-  const { binding, error } = await getBindingByDiscordUserId(discordUserId);
-  if (error) {
-    await interaction.reply(errorEmbedReply(error));
+  const binding = await checkBinding(interaction);
+  if (!binding) {
     return;
   }
-  const userId = binding.owner_id as UserID;
-
-  const { projects, error: projectsError } = await getProjectsByUserId(userId);
+  const { projects, error: projectsError } = await getProjectsByUserId(
+    binding.owner_id
+  );
   if (projectsError) {
     await interaction.reply(errorEmbedReply(projectsError));
     return;
