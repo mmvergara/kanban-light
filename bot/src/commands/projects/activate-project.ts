@@ -1,14 +1,27 @@
-import { type CacheType, type ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  type CacheType,
+  type ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from "discord.js";
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
-import { activateProject, createProject } from "../../repo/projects";
+import { activateProject } from "../../repo/projects";
 import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
 
 export const data = new SlashCommandBuilder()
   .setName("activate-project")
-  .setDescription("Activate a project this will be the default project for all column operations")
-  .addStringOption(option => option.setName("name").setDescription("The name of the project").setRequired(true));
+  .setDescription(
+    "Activate a project this will be the default project for all column operations"
+  )
+  .addStringOption((option) =>
+    option
+      .setName("name")
+      .setDescription("The name of the project")
+      .setRequired(true)
+  );
 
-export const execute = async (interaction: ChatInputCommandInteraction<CacheType>) => {
+export const execute = async (
+  interaction: ChatInputCommandInteraction<CacheType>
+) => {
   const discordUserId = interaction.user.id;
   const projectName = interaction.options.getString("name")!;
 
@@ -25,6 +38,9 @@ export const execute = async (interaction: ChatInputCommandInteraction<CacheType
   }
 
   await interaction.reply(
-    infoEmbedReply(`Project ${projectName} is now active`, "All column operations will be performed on this project")
+    infoEmbedReply(
+      `Project ${projectName} is now active`,
+      "All column operations will be performed on this project"
+    )
   );
 };
