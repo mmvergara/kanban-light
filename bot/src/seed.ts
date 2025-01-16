@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 
 export const seed = async () => {
   const userId = "7f9216e7-bb40-4cf8-bf60-6f45c9957664";
-  const projectId = "52b3a86f-e153-4b2c-9fd2-c9df3d758140";
+  const projectId = "0ac9c202-83d5-4b6e-b8af-5bed0686f101";
 
   const col1Id = uuid();
   const col2Id = uuid();
