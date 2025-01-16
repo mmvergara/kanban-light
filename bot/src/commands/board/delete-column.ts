@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { errorEmbedReply, successEmbedReply } from "../../messages";
-import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
+import { checkBinding, type UserID } from "../../repo/users";
 import { columnOrderValidate } from "../../utils/validators";
 import { deleteColumn } from "../../repo/columns";
 
@@ -21,21 +21,9 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const { binding, error: bindErr } = await getBindingByDiscordUserId(
-    interaction.user.id
-  );
-  if (bindErr) {
-    return await interaction.reply(
-      errorEmbedReply("An error occured while adding the task")
-    );
-  }
-
-  if (!binding.active_project) {
-    return await interaction.reply(
-      errorEmbedReply(
-        "You need to set an active project first, use /active-project"
-      )
-    );
+  const binding = await checkBinding(interaction);
+  if (!binding) {
+    return;
   }
 
   const valid = columnOrderValidate.safeParse(

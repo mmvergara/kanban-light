@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { getProjectColumnsWithTasks } from "../../repo/projects";
-import { getBindingByDiscordUserId } from "../../repo/users";
+import { checkBinding } from "../../repo/users";
 
 export const data = new SlashCommandBuilder()
   .setName("board")
@@ -17,19 +17,9 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const { binding, error: bindErr } = await getBindingByDiscordUserId(
-    interaction.user.id
-  );
-  if (bindErr) {
-    return await interaction.reply(
-      errorEmbedReply("An error occurred while fetching your active project")
-    );
-  }
-
-  if (!binding.active_project) {
-    return await interaction.reply(
-      infoEmbedReply("You don't have an active project")
-    );
+  const binding = await checkBinding(interaction);
+  if (!binding) {
+    return;
   }
 
   const { board, error } = await getProjectColumnsWithTasks(
