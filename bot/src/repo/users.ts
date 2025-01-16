@@ -2,10 +2,10 @@ import { supabase } from "../supabase";
 
 export type UserID = string & { readonly brand: unique symbol };
 
-export const getUserIdByDiscordUserId = async (discordUserId: string) => {
+export const getBindingByDiscordUserId = async (discordUserId: string) => {
   const { data, error } = await supabase
     .from("binding")
-    .select("owner_id")
+    .select("owner_id, discord_user_id, active_project, active_column")
     .eq("discord_user_id", Number.parseInt(discordUserId))
     .single();
 
@@ -15,7 +15,8 @@ export const getUserIdByDiscordUserId = async (discordUserId: string) => {
     }
     return { error: "An error occurred while fetching your projects" } as const; ;
   }
-  return { userId: data.owner_id as UserID } as const;
+
+  return { binding: data } as const;
 };
 
 export const bindDiscordUser = async (discordUserId: string, bindingKey: string): Promise<boolean> => {
