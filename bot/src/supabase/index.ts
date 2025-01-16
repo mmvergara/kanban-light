@@ -9,7 +9,7 @@ export const supabase = createClient<Database>(
 
 export const pingDb = async () => {
   const beforeQuery = Date.now();
-  const { statusText } = await supabase.from("tasks").select("id").limit(1);
+  const { statusText } = await supabase.from("projects").select("id").limit(1);
   if (statusText !== "OK") {
     throw new Error("Failed to ping database");
   }
