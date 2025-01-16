@@ -1,3 +1,4 @@
+import type { Board } from "../utils/types";
 import type { UserID } from "./users";
 import { z } from "zod";
 import { supabase } from "../supabase";
@@ -5,7 +6,7 @@ import { supabase } from "../supabase";
 export const getProjectsByUserId = async (userId: UserID) => {
   const { data, error } = await supabase
     .from("projects")
-    .select("name")
+    .select("name,id")
     .eq("owner_id", userId)
     .order("created_at", {
       ascending: true
@@ -15,7 +16,37 @@ export const getProjectsByUserId = async (userId: UserID) => {
     return { error: "An error occurred while fetching your projects" } as const;
   }
 
-  return { projects: data.map(project => project.name) } as const;
+  return { projects: data } as const;
+};
+
+export const activateProject = async (userId: UserID, name: string) => {
+  const valid = z.string().min(3).max(50).safeParse(name);
+  if (!valid.success) {
+    return { error: "The project name must be between 3 and 50 characters" } as const;
+  }
+
+  const { data: project, error } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("owner_id", userId)
+    .eq("name", valid.data)
+    .single();
+  if (error) {
+    console.log("Error in activate Project", error);
+    if (error.code === "PGRST116") {
+      return { error: "The project does not exist" } as const;
+    }
+    return { error: "An error occurred while activating the project" } as const;
+  }
+
+  const res = await supabase.from("binding")
+    .update({ active_project: project.id })
+    .eq("owner_id", userId);
+
+  if (res.error) {
+    console.log("Error in activate Project", res.error);
+    return { error: "An error occurred while activating the project" } as const;
+  }
 };
 
 export const createProject = async (userId: UserID, name: string) => {
@@ -36,19 +67,40 @@ export const createProject = async (userId: UserID, name: string) => {
   }
 };
 
-export const deleteProjectByName = async (userId: UserID, name: string) => {
-  const valid = z.string().min(3).max(50).safeParse(name);
-  if (!valid.success) {
-    return { error: "The project name must be between 3 and 50 characters" } as const;
-  }
-
+export const deleteProjectById = async (userId: UserID, projectId: string) => {
   const { error } = await supabase
     .from("projects")
     .delete()
     .eq("owner_id", userId)
-    .eq("name", valid.data);
+    .eq("id", projectId);
 
   if (error) {
+    console.log("Error deleting project", error);
     return { error: "An error occurred while deleting the project" } as const;
   }
+};
+
+export const getProjectColumnsWithTasks = async (projectId: string) => {
+  const { data: columns, error } = await supabase
+    .from("columns")
+    .select("id, name, tasks(name, order)")
+    .eq("project_id", projectId)
+    .order("order", {
+      ascending: true
+    });
+
+  if (error) {
+    console.log("Error in getProjectColumnsWithTasks", error);
+    return { error: "An error occurred while fetching the columns" } as const;
+  }
+
+  const board: Board = columns.map((column) => {
+    return {
+      [column.name]: column.tasks.sort((a, b) => a.order - b.order).map(task => task.name)
+    };
+  });
+
+  console.log("Board", board);
+
+  return { board } as const;
 };
