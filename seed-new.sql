@@ -89,8 +89,6 @@ CREATE TABLE public.binding (
     CONSTRAINT binding_pkey PRIMARY KEY (id),
     CONSTRAINT binding_active_project_fkey FOREIGN KEY (active_project)
         REFERENCES public.projects (id) ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT binding_active_column_fkey FOREIGN KEY (active_column)
-        REFERENCES public.columns (id) ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT binding_owner_id_fkey FOREIGN KEY (owner_id)
         REFERENCES auth.users (id) ON UPDATE CASCADE ON DELETE CASCADE
 ) TABLESPACE pg_default;
