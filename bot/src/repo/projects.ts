@@ -9,7 +9,7 @@ export const getProjectsByUserId = async (userId: UserID) => {
     .select("name,id")
     .eq("owner_id", userId)
     .order("created_at", {
-      ascending: true
+      ascending: true,
     });
 
   if (error) {
@@ -22,7 +22,9 @@ export const getProjectsByUserId = async (userId: UserID) => {
 export const activateProject = async (userId: UserID, name: string) => {
   const valid = z.string().min(3).max(50).safeParse(name);
   if (!valid.success) {
-    return { error: "The project name must be between 3 and 50 characters" } as const;
+    return {
+      error: "The project name must be between 3 and 50 characters",
+    } as const;
   }
 
   const { data: project, error } = await supabase
@@ -39,7 +41,8 @@ export const activateProject = async (userId: UserID, name: string) => {
     return { error: "An error occurred while activating the project" } as const;
   }
 
-  const res = await supabase.from("binding")
+  const res = await supabase
+    .from("binding")
     .update({ active_project: project.id })
     .eq("owner_id", userId);
 
@@ -52,15 +55,15 @@ export const activateProject = async (userId: UserID, name: string) => {
 export const createProject = async (userId: UserID, name: string) => {
   const valid = z.string().min(3).max(50).safeParse(name);
   if (!valid.success) {
-    return { error: "The project name must be between 3 and 50 characters" } as const;
+    return {
+      error: "The project name must be between 3 and 50 characters",
+    } as const;
   }
 
-  const { error } = await supabase
-    .from("projects")
-    .insert({
-      owner_id: userId,
-      name: valid.data
-    });
+  const { error } = await supabase.from("projects").insert({
+    owner_id: userId,
+    name: valid.data,
+  });
 
   if (error) {
     return { error: "An error occurred while creating the project" } as const;
@@ -86,7 +89,7 @@ export const getProjectColumnsWithTasks = async (projectId: string) => {
     .select("id, name, tasks(name, order)")
     .eq("project_id", projectId)
     .order("order", {
-      ascending: true
+      ascending: true,
     });
 
   if (error) {
@@ -94,13 +97,13 @@ export const getProjectColumnsWithTasks = async (projectId: string) => {
     return { error: "An error occurred while fetching the columns" } as const;
   }
 
-  const board: Board = columns.map((column) => {
+  const board: Board = columns.map((column, i) => {
     return {
-      [column.name]: column.tasks.sort((a, b) => a.order - b.order).map(task => task.name)
+      [column.name]: column.tasks
+        .sort((a, b) => a.order - b.order)
+        .map((task) => task.name),
     };
   });
-
-  console.log("Board", board);
 
   return { board } as const;
 };
