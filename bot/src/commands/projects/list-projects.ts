@@ -1,17 +1,18 @@
 import { type CacheType, type ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { errorEmbedReply, infoEmbedReply, } from "../../messages";
 import { getProjectsByUserId } from "../../repo/projects";
-import { getUserIdByDiscordUserId } from "../../repo/users";
+import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
 
 export const data = new SlashCommandBuilder().setName("list-projects").setDescription("List all projects");
 
 export const execute = async (interaction: ChatInputCommandInteraction<CacheType>) => {
   const discordUserId = interaction.user.id;
-  const { userId, error } = await getUserIdByDiscordUserId(discordUserId);
+  const { binding, error } = await getBindingByDiscordUserId(discordUserId);
   if (error) {
     await interaction.reply(errorEmbedReply(error));
     return;
   }
+  const userId = binding.owner_id as UserID;
 
   const { projects, error: projectsError } = await getProjectsByUserId(userId);
   if (projectsError) {
@@ -24,7 +25,10 @@ export const execute = async (interaction: ChatInputCommandInteraction<CacheType
       await interaction.reply(infoEmbedReply("You don't have any projects"));
       return;
     }
-    await interaction.reply(infoEmbedReply("Projects:", projects.join("\n")));
+    const projectsStr = projects.map((project) => {
+      return `${project.name}${project.id === binding.active_project ? "<- Active" : ""}`;
+    }).join("\n");
+    await interaction.reply(infoEmbedReply("Projects:", projectsStr));
     return;
   }
 
