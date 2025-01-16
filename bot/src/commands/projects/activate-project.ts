@@ -5,7 +5,8 @@ import {
 } from "discord.js";
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { activateProject } from "../../repo/projects";
-import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
+import { checkBinding, type UserID } from "../../repo/users";
+import { projectNameValidate } from "../../utils/validators";
 
 export const data = new SlashCommandBuilder()
   .setName("activate-project")
@@ -22,16 +23,21 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const discordUserId = interaction.user.id;
-  const projectName = interaction.options.getString("name")!;
-
-  const { binding, error } = await getBindingByDiscordUserId(discordUserId);
-  if (error) {
-    await interaction.reply(errorEmbedReply(error));
+  const binding = await checkBinding(interaction);
+  if (!binding) {
     return;
   }
-  const userId = binding.owner_id as UserID;
-  const res = await activateProject(userId, projectName);
+
+  const valid = projectNameValidate.safeParse(
+    interaction.options.getString("name")
+  );
+  if (valid.error) {
+    await interaction.reply(errorEmbedReply(valid.error.errors[0].message));
+    return;
+  }
+
+  const projectName = valid.data;
+  const res = await activateProject(binding.owner_id, projectName);
   if (res?.error) {
     await interaction.reply(errorEmbedReply(res.error));
     return;
