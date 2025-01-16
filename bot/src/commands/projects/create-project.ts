@@ -6,6 +6,7 @@ import {
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { createProject } from "../../repo/projects";
 import { checkBinding, type UserID } from "../../repo/users";
+import { projectNameValidate } from "../../utils/validators";
 
 export const data = new SlashCommandBuilder()
   .setName("create-project")
@@ -20,16 +21,18 @@ export const data = new SlashCommandBuilder()
 export const execute = async (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const projectName = interaction.options.getString("name")!;
-
   const binding = await checkBinding(interaction);
   if (!binding) {
     return;
   }
+  const valid = projectNameValidate.safeParse(
+    interaction.options.getString("name")
+  );
+  if (valid.error) {
+    return await interaction.reply(errorEmbedReply(valid.error.message));
+  }
 
-  const userId = binding.owner_id as UserID;
-
-  const res = await createProject(userId, projectName);
+  const res = await createProject(binding.owner_id, valid.data);
   if (res?.error) {
     await interaction.reply(errorEmbedReply(res.error));
     return;
