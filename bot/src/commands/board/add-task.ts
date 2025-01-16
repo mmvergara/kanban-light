@@ -51,6 +51,6 @@ export const execute = async (
     }
     await interaction.reply(successEmbedReply("Task added successfully"));
   } else {
-    return await interaction.reply(errorEmbedReply("Invalid input"));
+    return await interaction.reply(errorEmbedReply(error.errors[0].message));
   }
 };

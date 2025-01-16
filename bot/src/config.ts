@@ -28,7 +28,7 @@ const env = envSchema.safeParse(process.env);
 if (!env.success) {
   throw new Error(
     `Missing environment variables: ${env.error.errors
-      .map(e => e.path.join("."))
+      .map((e) => e.path.join("."))
       .join(", ")}`
   );
 }
