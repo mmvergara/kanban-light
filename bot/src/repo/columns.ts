@@ -69,27 +69,4 @@ export const deleteColumn = async ({
     console.error("Error deleting column", deleteErr);
     return { error: "Failed to delete column" };
   }
-  // reorder columns
-  const { data: columns, error: columnsErr } = await supabase
-    .from("columns")
-    .select("*")
-    .eq("project_id", projectId)
-    .order("order");
-  if (columnsErr) {
-    console.error("Error fetching columns", columnsErr);
-    return { error: "Failed to fetch columns" };
-  }
-
-  const reorderedColumns = columns.map((column, index) => ({
-    ...column,
-    order: index,
-  }));
-
-  const { error: updateErr } = await supabase
-    .from("columns")
-    .upsert(reorderedColumns);
-  if (updateErr) {
-    console.error("Error updating columns", updateErr);
-    return { error: "Failed to update columns" };
-  }
 };

@@ -9,6 +9,7 @@ import {
 import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { getProjectColumnsWithTasks } from "../../repo/projects";
 import { checkBinding } from "../../repo/users";
+export type Board = { [columnName: string]: string[] }[];
 
 export const data = new SlashCommandBuilder()
   .setName("board")

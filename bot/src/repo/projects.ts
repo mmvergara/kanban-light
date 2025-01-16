@@ -1,12 +1,7 @@
-import type { Board } from "../utils/types";
 import type { UserID } from "./users";
 import { z } from "zod";
 import { supabase } from "../supabase";
-import {
-  EmbedBuilder,
-  MessageFlags,
-  type InteractionReplyOptions,
-} from "discord.js";
+import type { Board } from "../commands/board/board";
 
 export const getProjectsByUserId = async (userId: UserID) => {
   const { data, error } = await supabase
