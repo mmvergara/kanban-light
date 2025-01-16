@@ -2,6 +2,11 @@ import type { Board } from "../utils/types";
 import type { UserID } from "./users";
 import { z } from "zod";
 import { supabase } from "../supabase";
+import {
+  EmbedBuilder,
+  MessageFlags,
+  type InteractionReplyOptions,
+} from "discord.js";
 
 export const getProjectsByUserId = async (userId: UserID) => {
   const { data, error } = await supabase
@@ -86,7 +91,7 @@ export const deleteProjectById = async (userId: UserID, projectId: string) => {
 export const getProjectColumnsWithTasks = async (projectId: string) => {
   const { data: columns, error } = await supabase
     .from("columns")
-    .select("id, name, tasks(name, order)")
+    .select("id, name,order, tasks(name, order)")
     .eq("project_id", projectId)
     .order("order", {
       ascending: true,
@@ -97,11 +102,11 @@ export const getProjectColumnsWithTasks = async (projectId: string) => {
     return { error: "An error occurred while fetching the columns" } as const;
   }
 
-  const board: Board = columns.map((column, i) => {
+  const board: Board = columns.map((column) => {
     return {
-      [column.name]: column.tasks
+      [`${column.order}. ${column.name}`]: column.tasks
         .sort((a, b) => a.order - b.order)
-        .map((task) => task.name),
+        .map((task) => `**${task.order}.** ${task.name}`),
     };
   });
 

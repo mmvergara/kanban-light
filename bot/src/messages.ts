@@ -56,26 +56,17 @@ export const tableEmbedReply = (
     .setTitle(title)
     .setDescription(description || null)
     .setColor("Aqua");
-
-  let colI = 0;
   for (const row of data) {
     for (const [columnName, values] of Object.entries(row)) {
       const taskList =
-        values.length > 0
-          ? values.map((t, i) => `${i + 1}. ${t}`).join("\n")
-          : "No tasks available";
-
+        values.length > 0 ? values.join("\n") : "No tasks available";
       embed.addFields({
-        name: `${colI + 1}. ${columnName}`,
+        name: columnName,
         value: taskList,
         inline: true,
       });
-      colI++;
     }
   }
-
-  console.log("Table embed", embed.toJSON());
-
   return {
     embeds: [embed],
     flags: ephemeral ? MessageFlags.Ephemeral : undefined,
