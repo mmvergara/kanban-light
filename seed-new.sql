@@ -14,7 +14,6 @@ CREATE TABLE public.projects (
     CONSTRAINT projects_pkey PRIMARY KEY (id),
     CONSTRAINT projects_owner_id_fkey FOREIGN KEY (owner_id)
         REFERENCES auth.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT projects_name_unique UNIQUE (name),
     CONSTRAINT projects_name_length CHECK (char_length(name) >= 3 AND
         char_length(name) <= 50)
 ) TABLESPACE pg_default;
@@ -40,7 +39,6 @@ CREATE TABLE public.columns (
         REFERENCES auth.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT columns_project_id_fkey FOREIGN KEY (project_id)
         REFERENCES public.projects (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT columns_name_unique UNIQUE (name),
     CONSTRAINT columns_name_length CHECK (char_length(name) >= 3 AND
         char_length(name) <= 50)
 ) TABLESPACE pg_default;
@@ -66,7 +64,6 @@ CREATE TABLE public.tasks (
         REFERENCES public.columns (id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT tasks_owner_id_fkey FOREIGN KEY (owner_id)
         REFERENCES auth.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT tasks_name_unique UNIQUE (name),
     CONSTRAINT tasks_name_length CHECK (char_length(name) <= 255)
 ) TABLESPACE pg_default;
 
@@ -84,7 +81,6 @@ CREATE TABLE public.binding (
     key UUID NOT NULL DEFAULT gen_random_uuid(),
     discord_user_id BIGINT, 
     active_project UUID,
-    active_column UUID,
     
     CONSTRAINT discord_user_id_length CHECK (discord_user_id IS NULL OR
         discord_user_id >= 0),

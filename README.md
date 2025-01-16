@@ -8,6 +8,10 @@
 Open source light weight kanban board
 </p>
 
+## TODO
+
+- Style horizontal scrollbar kanban board
+
 ## Features
 
 - 🔥 No Initial Load utilizing Local Storage
