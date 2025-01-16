@@ -44,7 +44,7 @@ export const execute = async (
     );
   } else {
     return await interaction.reply(
-      errorEmbedReply("Invalid column number, please try again")
+      errorEmbedReply(valid.error.errors[0].message)
     );
   }
 };

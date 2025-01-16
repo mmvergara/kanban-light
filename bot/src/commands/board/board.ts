@@ -28,7 +28,7 @@ export const execute = async (
   );
   if (error) {
     return await interaction.reply(
-      errorEmbedReply("An error occurred while fetching the board data")
+      errorEmbedReply("Something wen't wrong, does the project still exist?")
     );
   }
 
