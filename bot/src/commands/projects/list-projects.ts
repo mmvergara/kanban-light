@@ -1,11 +1,19 @@
-import { type CacheType, type ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { errorEmbedReply, infoEmbedReply, } from "../../messages";
+import {
+  type CacheType,
+  type ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from "discord.js";
+import { errorEmbedReply, infoEmbedReply } from "../../messages";
 import { getProjectsByUserId } from "../../repo/projects";
 import { getBindingByDiscordUserId, type UserID } from "../../repo/users";
 
-export const data = new SlashCommandBuilder().setName("list-projects").setDescription("List all projects");
+export const data = new SlashCommandBuilder()
+  .setName("list-projects")
+  .setDescription("List all projects");
 
-export const execute = async (interaction: ChatInputCommandInteraction<CacheType>) => {
+export const execute = async (
+  interaction: ChatInputCommandInteraction<CacheType>
+) => {
   const discordUserId = interaction.user.id;
   const { binding, error } = await getBindingByDiscordUserId(discordUserId);
   if (error) {
@@ -25,12 +33,18 @@ export const execute = async (interaction: ChatInputCommandInteraction<CacheType
       await interaction.reply(infoEmbedReply("You don't have any projects"));
       return;
     }
-    const projectsStr = projects.map((project) => {
-      return `${project.name}${project.id === binding.active_project ? "<- Active" : ""}`;
-    }).join("\n");
-    await interaction.reply(infoEmbedReply("Projects:", projectsStr));
+
+    const projectsStr = projects
+      .map((project) => {
+        return `• **${project.name}**${project.id === binding.active_project ? " (Active)" : ""}`;
+      })
+      .join("\n");
+
+    await interaction.reply(infoEmbedReply("Your Projects:", projectsStr));
     return;
   }
 
-  await interaction.reply(errorEmbedReply("An error occurred while fetching your projects"));
+  await interaction.reply(
+    errorEmbedReply("An error occurred while fetching your projects")
+  );
 };
